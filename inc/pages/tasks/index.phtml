@@ -1,0 +1,208 @@
+<div class="main">
+    <div class="description">
+        <h1 class="title"><?=CTasks::GetTranslate('b_task_generate')?></h1>
+    </div>
+    
+    <div class="form">
+        <!-- ФОРМА МАССОВОГО ДОБАВЛЕНИЯ ЗАДАНИЙ -->
+        <div id="task-packet">    
+        <div class="left" style="margin-right: 50px;">
+            <div class="box">
+                <i><?=CTasks::GetTranslate('b_create_site')?>:</i>
+                <select id="taskUploadTo" onchange="Task.ChangeUploadTo(this);" style="width: 200px;">
+                    <option value="loc"><?=CTasks::GetTranslate('b_this_server')?></option>
+                    <option value="ftp"
+                            selected='selected'><?=CTasks::GetTranslate('b_ftp_server')?></option>
+                </select>            
+            </div>
+
+            <div class="box">
+                <i>URL:</i>
+                <input type="text" id="taskNextUrl" size="38" placeholder="http://music.example.com">            
+            </div>
+
+            <div class="box" id="taskFtpField">
+                <i><?=CTasks::GetTranslate('b_ftp_server_name')?>:</i>
+                <input type="text" id="taskFtpServer" size="38"
+                           placeholder="ftp://login:password@ftp.example.com">            
+            </div>
+            
+            <div class="box">
+                <i><?=CTasks::GetTranslate('b_path_name')?>:</i>
+                <input type="text" id="taskPath" size="38" placeholder="www/music">            
+            </div>
+        </div>
+            
+        <div class="left">
+          <form name="upload_ftps" action="?module=tasks&a[uploadftps]" method="post" enctype="multipart/form-data">
+            <div class="box">
+                <i><?=CTasks::GetTranslate('b_keywords_name')?>:</i>                    
+                <select id="taskKeys" name="taskKeys" style="width: 200px;">
+                   <?=CModel_helper::ListFiles('data/keywords', $this->GetSettings()->Get('keysFromList'))?>
+                </select>
+            </div>
+            
+            <div class="box">
+                <i><?=CTasks::GetTranslate('b_text_name')?>:</i>
+                <select id="taskTexts" name="taskTexts" style="width: 200px;">
+                   <?=CModel_helper::ListFiles(CModel_text::PATH_TEXTS, $this->GetSettings()->Get('textFromList'))?>
+                </select>
+            </div>
+            
+            <div class="box">
+                <i><?=CTasks::GetTranslate('b_settings_name')?>:</i>
+                <select id="taskSettings" name="taskSettings" style="width: 200px;">
+                    <?php
+                    $list_settings=$this->GetSettings()->GetListConfigs();
+                    if(!empty($list_settings) && is_array($list_settings))
+                      {
+                      foreach($list_settings as $id_set=>$value_set)
+                         {
+                         ?>
+                             <option value="<?=$id_set?>"<?=$this->m_current_settings==$id_set?' selected="selected"':''?>><?=$value_set?></option><?
+                         }
+                      }
+                    ?>
+                </select>
+            </div>
+            <div class="box">
+              <i title="<?=CTasks::GetTranslate('b_load_ftps_title')?>"><?=CTasks::GetTranslate('b_load_ftps')?>:</i>
+              <input type="file" name="ftps" id="ftps" size="25" onchange="Task.UploadFtpFiles();">
+
+            </div>
+          </form>
+        </div>
+        <div class="clear"></div>
+            
+        <input type="button" value="<?=CTasks::GetTranslate('b_add_name')?>"
+                           onclick="Task.AddNew();" class="simpleButton">
+            
+        </div>
+    </div>
+    
+    <div class="clear"></div>
+</div>
+
+
+<?php
+//--- заранее получаем список заданий
+$list=$this->GetListTask();
+//--- получим модель
+$model=$this->GetModelTask();
+?>
+
+<div class="content">
+
+<!-- ТАБЛИЦА СО СПИСКОМ ЗАДАНИЙ -->
+<form action="" method="post" style="margin-bottom: 20px;">
+    <?=CTasks::GetTranslate('b_tasks_add')?>:<br>
+    <textarea id="taskList" name="taskList" wrap="off" style="width: 100%; height: 100px; margin-top: 3px;"></textarea>
+
+    <div style="margin-top: 10px">
+        <input type="submit" value="<?=CTasks::GetTranslate('b_task_add_list')?>"
+               class="simpleButton" style="position: static;" name="a[PacketAdd]">
+    </div>
+</form>
+
+
+
+<?php
+if(empty($list))
+   {
+   ?>
+   <div style="color: gray; text-align: center; padding: 30px 20px 60px 20px;">
+      <?=CTasks::GetTranslate('b_task_list_empty')?>
+   </div>
+   <?
+   }
+else
+   {
+   ?>
+    <div style="height: 50px; margin: 0; position: relative;">
+          <?php if($model->IsStartTask())
+          { ?>
+
+              <form action="?module=tasks&a[stoptask]" method="post" style="position: absolute; left: 0; top: 10px;">
+                 <?=CTasks::GetTranslate('b_begin_generating')?>
+                  <input type="submit" value="Остановить" class="simpleButton" style=" vertical-align: middle;">
+                  <a href="?module=tasks" style="margin-left: 10px;"><?=CTasks::GetTranslate('b_update')?></a>
+              </form>
+             <? }
+       else
+          { ?>
+              <form action="?module=tasks&a[runtasks]" method="post" style="position: absolute; left: 0; top:10px;">
+                  <input type="submit" value="<?=CTasks::GetTranslate('b_task_start')?>" class="simpleButton"
+                         style="vertical-align: middle;">
+
+                  <a href="javascript:if(confirm('<?=CTasks::GetTranslate('b_are_sure')?>')) Task.ClearTask();"
+                     style="margin-left: 10px;" class="dashed"><?=CTasks::GetTranslate('b_task_delete')?></a>
+              </form><? } ?>
+    </div>      
+       <form action="?module=tasks" method="post" name="tasks_send" style="margin-top: 10px;">
+       <input type="submit" name="a[deletetasks]" value="<?=CTasks::GetTranslate('b_delete_tasks')?>" onclick="return confirm('<?=CTasks::GetTranslate('b_sure_delete_tasks')?>')">
+       <input type="submit" name="a[repeattasks]" value="<?=CTasks::GetTranslate('b_repeat_tasks')?>">
+       <input type="hidden" name="task_ids" value="" id="task_ids">
+   </form>  
+
+   <form action="?module=tasks" method="post" name="tasks_need">
+       <table class="table" cellpadding="5" cellspacing="0" border="0">
+           <tr>
+               <th style="width:16px;"><input type="checkbox"
+                                              onclick="CheckedCheckbox(document.tasks_need,'task_',this.checked,'task_ids')"/>
+               </th>
+               <th style="width: 228px;">URL</th>
+               <th><?=CTasks::GetTranslate('b_path_name')?></th>
+               <th><?=CTasks::GetTranslate('b_server_name')?></th>
+               <th><?=CTasks::GetTranslate('b_keywords_name')?></th>
+               <th><?=CTasks::GetTranslate('b_text_name')?></th>
+               <th><?=CTasks::GetTranslate('b_settings_name')?></th>
+               <th style="width: 118px;"><?=CTasks::GetTranslate('b_date_name')?></th>
+               <th style="width: 118px;"><?=CTasks::GetTranslate('b_date_end_name')?></th>
+               <th><?=CTasks::GetTranslate('b_status_name')?></th>
+           </tr>
+
+          <?php
+          $c=0;
+          foreach($list as $fname)
+             {
+             $info=$model->GetTask($fname);
+             $id=$model->GetId($fname);
+             //--- пропускаем пустые задания и задания для перевода (они не тут должны быть)
+             
+             if(empty($info) || !isset($info['type']) || $info['type'] == CModel_task::TYPE_TRANSLATE)
+               continue;
+             //---
+             $c++;
+             //---
+             $isFtp=$info['task']['uploadTo'] == 'ftp';
+             $bg=false;
+             ?>
+                 <tr>
+                     <td><input type="checkbox" name="task[]" value="<?=$id?>" id="task_<?=$id?>"
+                                onclick="UpdateCheckedCheckbox('task_ids',this.checked,this.value)"/></td>
+                     <td><?php if(!empty($info['task']['nextUrl']))
+                        { ?><a
+                                href='<?=(CModel_helper::IsExistHttp($info['task']['nextUrl']) ? '' : 'http://') . $info['task']['nextUrl']?>'
+                                target='_blank'><?=$info['task']['nextUrl']?></a><? }?></td>
+                     <td><?=$isFtp ? $info['task']['ftpPath'] : $info['task']['localPath'] ?></td>
+                     <td><?=$isFtp ? 'ftp://' . $info['task']['ftpServer'] : '<i>local server</i>'?></td>
+                     <td><?=$info['task']['keysFrom'] == 'list' ? $info['task']['keysFromList'] : $info['task']['keysFromFile'] ?></td>
+                     <td><?=$info['task']['textFrom'] == 'list' ? $info['task']['textFromList'] : $info['task']['textFromFile'] ?></td>
+                     <td><?=!empty($info['settings'])?$info['settings']:$info['task']['settings']?></td>
+                     <td><?=date("d.m.Y H:i", $info['date_create'])?></td>
+                     <td><?=(isset($info['date_end']) && $info['date_end']>0) ? date("d.m.Y H:i", $info['date_end']):"&nbsp;"?></td>
+                     <td><?=CModel_task::GetStatusName($info['status'])?></td>
+                 </tr>
+                <?
+             }?>
+       </table>
+   </form>
+   <?= CTasks::GetTranslate('b_total') ?>: <?= $c ?>
+  
+   
+   <? } ?>
+</div>
+
+
+
+

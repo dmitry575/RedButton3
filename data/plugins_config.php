@@ -1,0 +1,1 @@
+<?php $GLOBAL_ACTIVE_PLUGINS = array('test' => 1,); ?>

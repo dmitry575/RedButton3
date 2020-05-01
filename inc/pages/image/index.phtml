@@ -1,0 +1,240 @@
+   <?php
+   if(isset($_SESSION['image_savesettings']))
+     {
+     if($_SESSION['image_savesettings'] == 1)
+       {
+       ?>
+       <div class="result success"><?=CImage::GetTranslate('b_settings_save_success')?></div>
+       <?php
+       }
+     else
+       {
+       ?>
+       <div class="result error"><?=CImage::GetTranslate('b_settings_save_error')?></div>
+       <?php
+       }
+     }
+   ?>
+
+
+<div class="main">
+    <div class="description">
+        <h1><?=CImage::GetTranslate('main_title')?></h1>
+    </div>
+    
+    <div class="form">
+        <form action="" method="post" id="mainForm" enctype="multipart/form-data" name="parse_image">
+            <div class="left" style="margin-right: 50px;">
+                <!-- ВЫБОР КЕЙВОРДОВ -->
+                <div class="box">
+                    <div class="name">
+                      <?=CImage::GetTranslate('b_keywords')?>
+                      <?=CModel_helper::SwapLinks('keysFrom', $this->GetSettings()->Get('keysFrom', 'list'), 'swapKeysFrom', array('file' => CHome::GetTranslate('from_file'),
+                                                                                                                                   'list' => CHome::GetTranslate('from_list'))) ?>
+                    </div>
+                    <input type="file" name="keysFromFile" id="keysFromFile" size="25"
+                           style="display: <?=$this->GetSettings()->Get('keysFrom', 'list') != 'list' ? 'block' : 'none' ?>;">
+                    <select name="keysFromList" id="keysFromList" onchange="var im=document.getElementById('images_file'); if(im) im.value=this.value;"
+                            style="width: 242px; display: <?=$this->GetSettings()->Get('keysFrom', 'list') == 'list' ? 'block' : 'none' ?>;">
+                      <?=CModel_helper::ListFiles(CModel_keywords::PATH_KEYWORDS, $this->GetSettings()->Get('keysFromList'))?>
+                    </select>
+                </div>
+                
+                <div class="box">
+                    <i><?=CImage::GetTranslate('b_path')?>:</i>
+                    <span style="color: gray;">/data/images/</span> <select name="path" id="path" style="width: 150px;">
+                      <?=CModel_helper::ListDirs(CModel_macros::PATH_IMAGES, $this->GetSettings()->Get('path'))?>
+                    </select>
+                </div>
+                
+                <div class="box">
+                    <input type="checkbox"
+                           name="path_clear" <?=$this->GetSettings()->Get('path_clear') == 'on' ? "checked='checked'" : NULL ?>
+                           id="path_clear" class="cb">
+                    <label for="path_clear"><?=CImage::GetTranslate('b_path_clear')?></label><br>
+                </div>
+                
+                <div class="box">
+                    <i><?=CImage::GetTranslate('b_new_path')?>:</i>
+                    <span style="color: gray;">/data/images/</span> <input type="text" name="images_path" id="images_path" style="width: 145px; " value="">                
+                </div>
+                
+               <div class="box">
+                    <input type="checkbox" name="save_file" <?=$this->GetSettings()->Get('save_file') == 'on' ? "checked='checked'" : NULL ?> id="save_file" class="cb">
+                           
+                    <label for="save_file"><?=CImage::GetTranslate('b_save_file')?>:</label><br>
+                    <span style="color: gray">/data/images/</span> 
+                    <input type="text" name="images_file" id="images_file" style="width: 140px; margin-top: 3px;" placeholder="images.txt" value="<?=$this->GetSettings()->Get('keysFromList')?>">
+                </div>
+
+                <div class="box">
+                    <input type="checkbox" name="save_keyword" <?=$this->GetSettings()->Get('save_keyword') == 'on' ? "checked='checked'" : NULL ?>
+                           id="save_keyword" class="cb">
+                    <label for="save_keyword"><?=CImage::GetTranslate('b_save_keyword')?></label>
+                </div>                  
+
+            </div>
+            
+            
+            <div class="left">                
+                <div class="box">
+                    <input type="checkbox"
+                           name="google" <?=$this->GetSettings()->Get('google') == 'on' ? "checked='checked'" : NULL ?>
+                           id="google" class="cb">
+                    <label for="google"><?=CImage::GetTranslate('b_google')?></label><br>
+
+                    <input type="checkbox"
+                           name="yandex" <?=$this->GetSettings()->Get('yandex') == 'on' ? "checked='checked'" : NULL ?>
+                           id="yandex" class="cb">
+                    <label for="yandex"><?=CImage::GetTranslate('b_yandex')?></label>
+                </div>
+
+                <div class="box">
+                    <i><?=CImage::GetTranslate('b_language')?></i>
+                    <select name="language" id="language" style="width: 242px;">
+                      <?php
+                      foreach(CTranslate::GetLanguages() as $lang)
+                        {
+                        ?>
+                            <option value="<?=$lang?>"<?=$lang == $this->m_lang ? " selected='selected'" : ""?>><?=$lang?></option>
+                          <?php
+                        }
+                      ?>
+                    </select>
+                </div>  
+                
+                
+<?
+$threads = $this->GetSettings()->Get('threads');
+$proxies = $this->GetGlobalSettings()->GetProxies();
+$socks_proxies = $this->GetGlobalSettings()->GetSocksProxies();
+$disabled_threads = false;
+if(empty($proxies) && empty($socks_proxies))
+{
+$threads = "";
+$disabled_threads = true;
+}
+?>                
+                <div class="box">
+                    <input type="checkbox"
+                           name="threads" <?= $threads == 'on' ? "checked='checked'" : NULL ?>
+                           id="threads" class="cb"<?=$disabled_threads?" disbled='disabled'":""?> onclick="swapMaxThreads(this);">
+                    <label for="threads" title="<?=CImage::GetTranslate('b_need_proxy')?>"><?=CImage::GetTranslate('b_threads')?></label>
+                    <div id="count_threads">
+                       <?=CImage::GetTranslate('b_count_threads')?>
+                     <input type="text" name="threads_count" id="threads_count" style="width: 40px;" value="<?=$this->GetSettings()->Get('threads_count',15)?>" title="<?=CImage::GetTranslate('b_threads_count_title')?>">
+                    </div>
+                </div>                              
+                
+                <div class="box">
+                    <?=CImage::GetTranslate('b_width_image')?>
+                    <input type="text" name="images_width" id="images_width" style="width: 40px;" value="<?=$this->GetSettings()->Get('images_width',400)?>" title="<?=CImage::GetTranslate('b_width_image_title')?>"> px
+                </div>
+                
+                <div class="box">
+                    <?=CImage::GetTranslate('b_pause')?>
+                    <input type="text" name="pause" id="pause" style="width: 40px;" value="<?=$this->GetSettings()->Get('pause',5)?>"> 
+                </div>
+                
+                <div class="box">
+                    <?=CImage::GetTranslate('b_count_images')?>: 
+                    <input type="text" name="count_images" id="count_images" style="width: 40px;" value="<?=$this->GetSettings()->Get('count_images',300)?>"> 
+                </div>
+               
+
+            </div>
+            <div class="clear"></div>
+            
+            <input type="submit" value="<?=CImage::GetTranslate('b_add_task')?>" class="simpleButton" name="a[savetask]">
+        </form>    
+    </div>
+    <div class="clear"></div>
+
+</div>
+
+
+<div class="content" style="position: relative;">
+  <?php if(!empty($this->m_list_task))
+  {
+  ?>
+    <?php if($this->m_model->IsStartTask())
+    {
+    ?>
+
+        <form action="?module=image&a[stoptask]" method="post" style="">
+          <?=CImage::GetTranslate('b_working')?>
+            <input type="submit" value="<?=CImage::GetTranslate('b_stop')?>" class="simpleButton"
+                   style=" vertical-align: middle;">
+
+            <a href="?module=image" style="margin-left: 10px;"><?=CImage::GetTranslate('b_refresh')?></a>
+        </form>
+      <?
+    }
+  else
+    {
+        ?>
+        <form action="?module=image&a[runtasks]" method="post" style="">
+            <input type="submit" value="<?=CImage::GetTranslate('b_task_start')?>" class="simpleButton"
+                   style="vertical-align: middle;">
+
+            <a href="?module=image&a[cleartask]"
+               onclick="return confirm(<?=CImage::GetTranslate('b_are_sure_delete')?>)" style="margin-left: 10px;"
+               class="dashed"><?=CImage::GetTranslate('b_task_delete')?></a>
+        </form>
+        <? 
+    } ?>
+    
+      
+      <form action="?module=image" method="post" name="images_need" style="margin: 10px 0;">
+
+          <table class="table" cellpadding="5" cellspacing="0" border="0">
+              <tr>
+                  <th style="width:16px;"><input type="checkbox"
+                                                 onclick="CheckedCheckbox(document.images_need,'images_',this.checked,'images_ids')"/>
+                  </th>
+                  <th style="width: 228px;"><?=CImage::GetTranslate('b_system')?></th>
+                  <th><?=CImage::GetTranslate('b_keywords')?></th>
+                  <th><?=CImage::GetTranslate('b_path_download')?></th>
+                  <th style="width: 118px;"><?=CImage::GetTranslate('b_date')?></th>
+                  <th><?=CImage::GetTranslate('b_status')?></th>
+              </tr>
+
+            <?php
+            $c = 0;
+            foreach($this->m_list_task as $fname)
+              {
+              $info = $this->m_model->GetTask($fname);
+              if(empty($info)) continue;
+              $c++;
+              //---
+              $system = '';
+              if(!empty($info['task']['google'])) $system .= (!empty($system) ? ", " : "") . 'google';
+              if(!empty($info['task']['yandex'])) $system .= (!empty($system) ? ", " : "") . 'yandex';
+              ?>
+                  <tr>
+                      <td><input type="checkbox" name="images[]" value="<?=$info['number']?>"
+                                 id="images_<?=$info['number']?>"
+                                 onclick="UpdateCheckedCheckbox('images_ids',this.checked,this.value)"/></td>
+                      <td><?=$system?></td>
+                      <td><?=$info['task']['keysFrom'] == 'list' ? $info['task']['keysFromList'] : count($info['task']['keywords']) . ' keywords' ?></td>
+                      <td><?=$this->GetSettings()->Get('save_file') == 'on' ? CImage::GetTranslate('b_url_file').' '.(CModel_ParserImage::IMAGES_FILE_PATH.$info['task']['images_file'])  :$info['task']['path']?></td>
+                      <td><?=date("d.m.Y H:i", $info['date_create'])?></td>
+                      <td><?=CModel_task::GetStatusName($info['status'])?></td>
+                  </tr><?
+              }?>
+          </table>
+      </form>
+      
+      
+      
+  <?= CTasks::GetTranslate('b_total') ?>: <?= $c ?>
+
+      <form action="?module=image" method="post" name="form_images" style="margin-top: 10px;">
+          <input type="submit" name="a[deleteimages]" value="<?=CImage::GetTranslate('b_delete_images')?>" onclick="return ">
+          <input type="submit" name="a[repeatimages]" value="<?=CImage::GetTranslate('b_repeat_images')?>">
+          <input type="hidden" name="images_ids" value="" id="images_ids">
+      </form>  
+  
+    <?
+  }?>
+</div>

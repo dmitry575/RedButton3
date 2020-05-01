@@ -1,0 +1,38 @@
+Accounting, finance 
+Advertising, public 
+Relations 
+Arts, entertainment, publishing 
+Banking, mortgage 
+Clerical, administrative 
+Construction, facilities 
+Customer 
+Service 
+Education, training 
+Engineering, architecture 
+Government 
+Health 
+Care 
+Hospitality, travel 
+Human 
+Resources 
+Insurance 
+Internet, new 
+Media 
+Law 
+Enforcement, security 
+Legal 
+Management
+Consulting 
+Manufacturing, operations 
+Marketing 
+Non-Profit, volunteer 
+Pharmaceutical, biotech 
+Real 
+Estate 
+Restaurant, food 
+Service 
+Retail 
+Sales 
+Technology 
+Telecommunications 
+Transportation, logistics

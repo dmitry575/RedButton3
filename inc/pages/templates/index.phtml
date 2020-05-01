@@ -1,0 +1,142 @@
+   <?php
+   if(isset($_SESSION['templates_save']))
+      {
+      ?>
+      <div style="padding:10px; margin: -10px -10px 0 -10px; clear: both;">
+         <?php
+         if($_SESSION['templates_save'] == 1)
+            {
+            ?>
+                <div class="result success"><?=CTemplates::GetTranslate('b_template_save_success')?></div>
+               <?php
+            }
+         else
+            {
+            ?>
+                <div class="result error"><?=CTemplates::GetTranslate('b_template_save_error')?></div>
+               <?php
+            }
+         ?>
+      </div>
+      <?php
+      }
+   ?>
+   
+
+<div class="main">
+    <div class="description">
+        <h1><?=CTemplates::GetTranslate('main_title')?></h1>
+    </div>
+    
+    <div class="form">
+        <form action="?module=templates" method="post" name="formtemplate">
+            <div class="box">
+                <i>Template:</i>
+                <select name="template" id="template" style="width: 200px;" onchange="Templates.ChangeSelect(this)">
+                  <?=CModel_helper::ListDirsSubDirs(CModel_template::TEMPLATE_PATH, $this->m_template,array('index.html','page.html'))?>
+                </select>
+            </div>
+            
+            <div class="box">
+                <i>Page:</i>
+                <select name="page" id="page" style="width: 200px;" onchange="Templates.ChangeSelect(this)">
+                   <?=$this->ListTemplates()?>
+                </select>
+            </div>
+                
+            <input type="submit" name="a[showtemplate]" class="simpleButton" value="<?=CTemplates::GetTranslate('b_view_template')?>">
+        </form>
+    </div>
+    <div class="clear"></div>
+
+</div>
+
+
+<div class="content">
+
+
+
+<form action="?module=templates" method="post" name="formtemplate">
+    <input type="hidden" name="template" value="<?=htmlspecialchars($this->m_template)?>" id="template_form">
+    <input type="hidden" name="page" value="<?=htmlspecialchars($this->m_page)?>" id="page_form">
+    
+    <div class="template-content">
+        <div class="template-menu">
+            <h2><?=CTemplates::GetTranslate('b_keywords')?></h2>
+            <a href="#" onclick="return Templates.SetKeyword('[KEYWORD]')">[KEYWORD]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[UC-KEYWORD]')">[UC-KEYWORD]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[UCW-KEYWORD]')">[UCW-KEYWORD]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-KEYWORD]')">[RAND-KEYWORD]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-UC-KEYWORD]')">[RAND-KEYWORD]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[ENCODE-CURRENT-KEY]')">[ENCODE-CURRENT-KEY]</a>
+
+            <h2><?=CTemplates::GetTranslate('b_menu')?></h2>
+            <a href="#" onclick="return Templates.SetKeyword('[MENU-CATEGORY]')">[MENU-CATEGORY]</a>
+
+            <h2><?=CTemplates::GetTranslate('b_links')?></h2>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-LINK]')">[RAND-LINK]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[GO-LINK-HTML]')">[GO-LINK-HTML]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-UC-LINK]')">[RAND-UC-LINK]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-UC-LINK-5-10]')">[RAND-UC-LINK-5-10]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[UC-LINK-5]')">[UC-LINK-5]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[NEXT-LINK]')">[NEXT-LINK]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[PREV-LINK]')">[PREV-LINK]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[NEXT-UC-LINK]')">[NEXT-UC-LINK]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[PREV-UC-LINK]')">[PREV-UC-LINK]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[NEXT-UCW-LINK]')">[NEXT-UCW-LINK]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[PREV-UCW-LINK]')">[PREV-UCW-LINK]</a>
+
+            <h2><?=CTemplates::GetTranslate('b_urls')?></h2>            
+            <a href="#" onclick="return Templates.SetKeyword('[GO-URL]')">[GO-URL]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-URL]')">[RAND-URL]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[NEXT-URL]')">[NEXT-URL]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[PREV-URL]')">[PREV-URL]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[HOME-URL]')">[HOME-URL]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[SITE-URL]')">[SITE-URL]</a>
+             
+            <h2><?=CTemplates::GetTranslate('b_text')?></h2>
+            <a href="#" onclick="return Templates.SetKeyword('[TEXT-5-10]')">[TEXT-5-10]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[TEXT-NOKEY-5-10]')">[TEXT-NOKEY-5-10]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[TEXT-CLEAR-5-10]')">[TEXT-CLEAR-5-10]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[TEXT-CLEAR-NOKEY-5-10]')">[TEXT-CLEAR-NOKEY-5-10]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RANDLIST-CATS]')">[RANDLIST-CATS]</a>
+
+            <h2><?=CTemplates::GetTranslate('b_images')?></h2>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-IMG]')">[RAND-IMG]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-IMG-200-250]')">[RAND-IMG-200-250]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-IMG-path]')">[RAND-IMG-path]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-IMG-path-200-250]')">[RAND-IMG-path-200-250]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[GEN-IMG]')">[GEN-IMG]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[GEN-IMG-200-250]')">[GEN-IMG-200-250]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[GEN-IMG-path]')">[GEN-IMG-path]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[GEN-IMG-path-200-250]')">[GEN-IMG-path-200-250]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-IMG-URL-file.txt]')">[RAND-IMG-URL-file.txt]</a>
+
+            <h2><?=CTemplates::GetTranslate('b_other')?></h2>
+            <a href="#" onclick="return Templates.SetKeyword('[NICK]')">[NICK]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-5-25]')">[RAND-5-25]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[N]')">[N]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[SITEMAP-CONTENT]')">[SITEMAP-CONTENT]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[TAGS]')">[TAGS]</a>
+
+            <h2><?=CTemplates::GetTranslate('b_urls_spam')?></h2>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-SPAM-URL]')">[RAND-SPAM-URL]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-SPAM-LINK]')">[RAND-SPAM-LINK]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-SPAM-UC-LINK]')">[RAND-SPAM-UC-LINK]</a>
+            <a href="#" onclick="return Templates.SetKeyword('[RAND-SPAM-UC-LINK-5-10]')">[RAND-SPAM-UC-LINK-5-10]</a>
+        </div>
+
+        <div class="template-text">
+            <textarea name="text" style="width:100%; height: 700px;" id="template_text"><?=$text?></textarea>
+            
+            <input type="submit" value="<?=CTemplates::GetTranslate('b_save')?>" 
+               name="a[SaveTemplate]" style="width: 100px;height: 30px; margin-top: 5px;">
+            
+        </div>
+        <div class="clear">&nbsp;</div>
+
+
+    </div>
+</form>
+
+</div>

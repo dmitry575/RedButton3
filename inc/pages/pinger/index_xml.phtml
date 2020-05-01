@@ -1,0 +1,98 @@
+<div class="content" style="position: relative;">
+<h2 style="float:left;"><a href="?module=pinger"><?=CPinger::GetTranslate('b_tasks_pings')?></a></h2>
+<h2 style="float:left;margin-left:15px;"><?=CPinger::GetTranslate('b_tasks_xml')?></h2>
+<div class="clear">&nbsp;</div>
+<?php
+  if(isset($_SESSION['pings_task_added']))
+    {
+      ?>
+        <div class="result success" style="margin: 10px;"><?=CPinger::GetTranslate('b_pingers_task_added')?> <?=$_SESSION['pings_task_added']?></div>
+      <?php
+    }
+  ?>
+
+  <?php if(!empty($this->m_list_task))
+    {
+    ?>
+    <?php
+    $start = '';
+    if($this->m_model->IsStartTaskXml($start))
+      {
+      ?>
+
+        <form action="?module=pinger&name=xml&a[stoptask]" method="post" style="">
+          <?=CPinger::GetTranslate('b_working')?>
+          <input type="submit" value="<?= CPinger::GetTranslate('b_stop') ?>" class="simpleButton" style=" vertical-align: middle;">
+          <a href="?module=pinger" style="margin-left: 10px;"><?=CPinger::GetTranslate('b_refresh')?></a>
+        </form>
+      <?
+      $start_info = $this->m_model->GetStartStatusValue($start);
+        if(!empty($start_info))
+          {
+?>          <div style="margin: 10px 0px;"><?=CPinger::GetTranslate('b_working_url')?>: <a href="<?=$start_info['url']?>" target="_blank"><?=$start_info['url']?></a>, <?=$start_info['time']?></div>
+          <?
+          }
+      }
+    else
+      {
+      ?>
+        <form action="?module=pinger&name=xml&a[runtasks]" method="post" style="">
+          <input type="submit" value="<?= CPinger::GetTranslate('b_task_start') ?>" class="simpleButton"
+                 style="vertical-align: middle;">
+
+          <a href="?module=pinger&name=xml&a[cleartask]"
+             onclick="return confirm('<?= CPinger::GetTranslate('b_are_sure_delete') ?>');" style="margin-left: 10px;"
+             class="dashed"><?=CPinger::GetTranslate('b_task_delete')?></a>
+        </form>
+        <? } ?>
+
+      <form action="?module=pinger&name=xml" method="post" name="tasks_need" style="margin: 10px 0;">
+        <table class="table" cellpadding="5" cellspacing="0" border="0">
+          <tr>
+            <th style="width:16px;"><input type="checkbox"
+                                           onclick="CheckedCheckbox(document.tasks_need,'tasks_',this.checked,'tasks_ids')"/>
+            </th>
+            <th style="width: 298px;"><?=CPinger::GetTranslate('b_url')?></th>
+            <th style="width: 298px;"><?=CPinger::GetTranslate('b_url_rss')?></th>
+            <th style="width: 258px;"><?=CPinger::GetTranslate('b_url_post')?></th>
+            <th style="width: 258px;"><?=CPinger::GetTranslate('b_url_title')?></th>
+            <th style="width: 118px;"><?=CPinger::GetTranslate('b_date')?></th>
+            <th><?=CPinger::GetTranslate('b_status')?></th>
+          </tr>
+
+          <?php
+          $c = 0;
+          foreach($this->m_list_task as $fname)
+            {
+            $info = $this->m_model->GetTask($fname);
+            if(empty($info)) continue;
+            $c++;
+            ?>
+              <tr>
+              <td><input type="checkbox" name="tasks[]" value="<?= $info['number'] ?>"
+                         id="tasks_<?= $info['number'] ?>"
+                         onclick="UpdateCheckedCheckbox('tasks_ids',this.checked,this.value)"/></td>
+              <td><?=$info['task']['url']?></td>
+              <td><?=isset($info['task']['url_rss'])?$info['task']['url_rss']:'&nbsp;'?></td>
+              <td><?=isset($info['task']['url_post'])?$info['task']['url_post']:'&nbsp;'?></td>
+              <td><?=isset($info['task']['url_title'])?$info['task']['url_title']:'&nbsp;'?></td>
+              <td><?=isset($info['date_create']) && $info['date_create'] > 0 ? date("d.m.Y H:i", $info['date_create']):''?></td>
+              <td><?=CModel_task::GetStatusName($info['status'])?></td>
+              </tr><?
+            }?>
+        </table>
+      </form>
+    <?= CPinger::GetTranslate('b_total') ?>: <?= $c ?>
+    
+      <form action="?module=pinger&name=xml" method="post" name="form_tasks" style="margin-top: 10px;">
+        <input type="submit" name="a[deletetasks]" value="<?= CPinger::GetTranslate('b_delete_tasks_selected') ?>"
+               onclick="return confirm(<?= CPinger::GetTranslate('b_are_sure_delete') ?>)">
+        <input type="submit" name="a[repeattasks]" value="<?=CPinger::GetTranslate('b_repeat_tasks')?>">
+        <input type="hidden" name="tasks_ids" value="" id="tasks_ids">
+      </form>
+    
+    <?
+    }
+  ?>
+  <div style="margin-top:10px;"><a href="?module=pinger&act=tasksadd"><?=CPinger::GetTranslate('b_tasks_add')?></a></div>
+</div>

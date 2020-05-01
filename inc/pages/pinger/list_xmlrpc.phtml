@@ -1,0 +1,89 @@
+﻿<div style="padding: 10px">
+  <h2><?= CPinger::GetTranslate('b_view_xmlrpc_servers')?></h2>
+  <?php
+  if(isset($_SESSION['pinger_savesettings']))
+    {
+    if($_SESSION['pinger_savesettings'] == 1)
+      {
+      ?>
+        <div class="result success" style="margin: 10px;"><?=CPinger::GetTranslate('b_settings_save_success')?></div>
+      <?php
+      }
+    else
+      {
+      ?>
+        <div class="result error" style="margin: 10px;"><?=CPinger::GetTranslate('b_settings_save_error')?></div>
+      <?php
+      }
+    }
+  ?>
+  <?php
+  if(isset($_SESSION['pinger_saveservers']))
+    {
+    if($_SESSION['pinger_saveservers'] == 1)
+      {
+      ?>
+        <div class="result success" style="margin: 10px;"><?=CPinger::GetTranslate('b_servers_save_success')?></div>
+      <?php
+      }
+    else
+      {
+      ?>
+        <div class="result error" style="margin: 10px;"><?=CPinger::GetTranslate('b_servers_save_error')?></div>
+      <?php
+      }
+    }
+  ?>
+  <form action="?module=pinger" method="post" name="form_tasks">
+        <input type="submit" name="a[deletexmlrpcservers]" value="<?= CPinger::GetTranslate('b_delete_servers') ?>"
+               onclick="return confirm(<?= CPinger::GetTranslate('b_are_sure_delete_servers') ?>)">
+        <input type="hidden" name="servers_ids" value="" id="servers_ids">
+      </form>
+
+      <form action="?module=pinger" method="post" name="servers_need">
+<?
+//---
+if(!empty($this->m_list_servers))
+{
+?>
+<table class="table" cellpadding="5" cellspacing="0" border="0">
+  <tr>
+    <th style="width:16px;"><input type="checkbox"
+                                   onclick="CheckedCheckbox(document.servers_need,'servers_',this.checked,'servers_ids')"/>
+    </th>
+    <th style=""><?=CPinger::GetTranslate('b_url')?></th>
+    <th style="width: 140px;"><?=CPinger::GetTranslate('b_date_create')?></th>
+    <th style="width: 140px;"><?=CPinger::GetTranslate('b_date_last')?></th>
+    <th style="width: 140px;"><?=CPinger::GetTranslate('b_date_last_success')?></th>
+    <th style="width: 140px;"><?=CPinger::GetTranslate('b_count_invalids_40x')?></th>
+    <th style="width: 140px;"><?=CPinger::GetTranslate('b_count_invalids_50x')?></th>
+  </tr>
+
+  <?
+$i=0;
+  foreach($this->m_list_servers as $url=>$info)
+  {
+$i++;
+  ?>
+
+  <tr>
+    <td><input type="checkbox" name="servers[]" value="<?=htmlspecialchars($url) ?>"
+               id="servers_<?= $i ?>"
+               onclick="UpdateCheckedCheckbox('servers_ids',this.checked,this.value)"/></td>
+    <td><?=$url?></td>
+    <td><?=$info['date_create']>0?date("d.m.Y H:i", $info['date_create']):"&nbsp;"?></td>
+    <td><?=$info['date_last']>0?date("d.m.Y H:i", $info['date_last']):"&nbsp;"?></td>
+    <td><?=isset($info['date_last_success']) && $info['date_last_success']>0?date("d.m.Y H:i", $info['date_last_success']):"&nbsp;"?></td>
+    <td><?=$info['invalid_40x']?></td>
+    <td><?=$info['invalid_50x']?></td>
+  </tr>
+<?
+  }
+
+  ?>
+</table>
+<?
+}
+?>
+</form>
+  </div>

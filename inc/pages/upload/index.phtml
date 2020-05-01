@@ -1,0 +1,115 @@
+<div class="main">
+  <div class="description">
+    <h1 class="title"><?=CUpload::GetTranslate('b_upload_generate')?></h1>
+  </div>
+
+  <div class="form">
+    <?=CUpload::GetTranslate('b_upload_description')?>
+  </div>
+
+  <div class="clear"></div>
+</div>
+
+
+<?php
+//--- получим модель
+$model = $this->GetModelTask();
+?>
+
+<div class="content">
+  <div style="height: 50px; margin: 0; position: relative;">
+    <?php if($model->IsStartTask())
+      {
+      ?>
+
+        <form action="?module=upload&a[stoptask]" method="post" style="position: absolute; left: 0; top: 10px;">
+          <?=CUpload::GetTranslate('b_begin_generating')?>
+          <input type="submit" value="Остановить" class="simpleButton" style=" vertical-align: middle;">
+          <a href="?module=upload" style="margin-left: 10px;"><?=CUpload::GetTranslate('b_update')?></a>
+        </form>
+      <?
+      }
+    else
+      {
+      ?>
+        <form action="?module=upload&a[runtasks]" method="post" style="position: absolute; left: 0; top:10px;">
+        <input type="submit" value="<?= CUpload::GetTranslate('b_task_start') ?>" class="simpleButton"
+               style="vertical-align: middle;">
+
+        <a href="?module=upload&a[cleartask]"
+           style="margin-left: 10px;" class="dashed" onclick="return confirm('<?= CUpload::GetTranslate('b_are_sure') ?>');"><?=CUpload::GetTranslate('b_task_delete')?></a>
+        </form><? } ?>
+  </div>
+  <form action="?module=upload" method="post" name="tasks_send" style="margin-top: 10px;">
+    <input type="submit" name="a[deletetasks]" value="<?= CUpload::GetTranslate('b_delete_tasks') ?>"
+           onclick="return confirm('<?= CUpload::GetTranslate('b_sure_delete_tasks') ?>')">
+    <input type="submit" name="a[repeattasks]" value="<?= CUpload::GetTranslate('b_repeat_tasks') ?>">
+    <input type="hidden" name="task_ids" value="" id="task_ids">
+  </form>
+
+  <form action="?module=upload" method="post" name="tasks_need">
+    <table class="table" cellpadding="5" cellspacing="0" border="0">
+      <tr>
+        <th style="width:16px;"><input type="checkbox"
+                                       onclick="CheckedCheckbox(document.tasks_need,'task_',this.checked,'task_ids')"/>
+        </th>
+        <th style="width: 228px;">URL</th>
+        <th><?=CUpload::GetTranslate('b_path_name')?></th>
+        <th><?=CUpload::GetTranslate('b_server_name')?></th>
+        <th><?=CUpload::GetTranslate('b_settings_name')?></th>
+        <th style="width: 118px;"><?=CUpload::GetTranslate('b_date_name')?></th>
+        <th style="width: 118px;"><?=CUpload::GetTranslate('b_date_end_name')?></th>
+        <th><?=CUpload::GetTranslate('b_status_name')?></th>
+      </tr>
+
+      <?php
+      $c = 0;
+      for($i = 0; $i < CModel_UploadTask::THREADS_COUNT; $i++)
+        {
+        ?>
+          <tr>
+            <td colspan="7"><strong>THREAD <?=$i?></strong></td>
+          </tr>
+        <?
+        $list = $model->GetListTask($i);
+        if(empty($list)) continue;
+        foreach($list as $fname)
+          {
+          $info = $model->GetTask(CModel_UploadTask::PATH.$i.'/'.$fname);
+          $id   = $model->GetId($fname);
+          //--- пропускаем пустые задания и задания для перевода (они не тут должны быть)
+          if(empty($info)) continue;
+          //---
+          $c++;
+          //---
+          $bg = false;
+          ?>
+            <tr>
+              <td><input type="checkbox" name="task[]" value="<?= $i ?>_<?= $id ?>" id="task_<?= $id ?>"
+                         onclick="UpdateCheckedCheckbox('task_ids',this.checked,this.value)"/></td>
+              <td><?php if(!empty($info['task']['nextUrl']))
+                  {
+                  ?><a
+                    href='<?= (CModel_helper::IsExistHttp($info['task']['nextUrl']) ? '' : 'http://') . $info['task']['nextUrl'] ?>'
+                    target='_blank'><?= $info['task']['nextUrl'] ?></a><? }?></td>
+              <td><?=$info['task']['ftpPath']?></td>
+              <td><?='ftp://' . $info['task']['ftpServer']?></td>
+              <td><?=!empty($info['settings']) ? $info['settings'] : $info['task']['settings']?></td>
+              <td><?=date("d.m.Y H:i", $info['date_create'])?></td>
+              <td><?=(isset($info['date_end']) && $info['date_end'] > 0) ? date("d.m.Y H:i", $info['date_end']) : "&nbsp;"?></td>
+              <td><?=CModel_UploadTask::GetStatusName($info['status'])?></td>
+            </tr>
+          <?
+          }
+        }
+      ?>
+    </table>
+  </form>
+  <?= CUpload::GetTranslate('b_total') ?>: <?= $c ?>
+
+
+</div>
+
+
+
+

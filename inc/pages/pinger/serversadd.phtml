@@ -1,0 +1,39 @@
+<?php
+if(isset($_SESSION['pinger_saveservers']))
+  {
+  if($_SESSION['pinger_saveservers'] == 1)
+    {
+    ?>
+    <div class="result success"><?=CPinger::GetTranslate('b_servers_save_success')?></div>
+    <?php
+    }
+  else
+    {
+    ?>
+    <div class="result error"><?=CPinger::GetTranslate('b_servers_save_error')?></div>
+    <?php
+    }
+  }
+?>
+<div style="padding: 10px">
+  <table cellpadding="0" cellspacing="0" style="width: 100%;" class="vertical">
+        <tr>
+          <td style="padding-bottom:15px;"><?=CPinger::GetTranslate('b_services_add_description')?><br></td>
+        </tr>
+        <tr>
+            <td valign="top">
+                <form action="" method="post">
+                   <h2><?=CPinger::GetTranslate('b_ping_add_description')?></h2>
+                   <textarea id="urls" name="urls" wrap="off" style="width: 100%; height: 300px"></textarea>
+                    <h2 style="margin: 10px 0px;"><?=CPinger::GetTranslate('b_xmlrpc_add_description')?></h2>
+                   <textarea id="urls" name="xmlprc_urls" wrap="off" style="width: 100%; height: 300px"></textarea>
+
+                    <div style="margin-top: 10px">
+                        <input type="submit" value="<?=CPinger::GetTranslate('b_services_add_list')?>"
+                               class="simpleButton" style="position: static;" name="a[ServersAdd]">
+                    </div>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>

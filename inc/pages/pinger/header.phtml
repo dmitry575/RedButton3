@@ -1,0 +1,41 @@
+﻿<script type="text/javascript" src="js/pinger.js"></script>
+
+<?php
+if(isset($_SESSION['pinger_savesettings']))
+  {
+  if($_SESSION['pinger_savesettings'] == 1)
+    {
+    ?>
+      <div class="result success"><?=CPinger::GetTranslate('b_settings_save_success')?></div>
+    <?php
+    }
+  else
+    {
+    ?>
+      <div class="result error"><?=CPinger::GetTranslate('b_settings_save_error')?></div>
+    <?php
+    }
+  }
+?>
+
+<div class="main">
+    <div class="description">
+        <h1><a href="?module=pinger"><?=CPinger::GetTranslate('main_title')?></a></h1>
+    </div>
+    
+    <div class="form">
+        <div class="box">
+            
+            <i><a href="?module=pinger&act=viewservers" title="<?=CPinger::GetTranslate('b_view_servers_title')?>"><?=CPinger::GetTranslate('b_view_servers')?></a> |
+              <a href="?module=pinger&act=rpcviewservers" title="<?=CPinger::GetTranslate('b_view_xmlrpc_servers_title')?>"><?=CPinger::GetTranslate('b_view_xmlrpc_servers')?></a></i>
+            
+            <i><a href="?module=pinger&act=serversadd" title="<?=CPinger::GetTranslate('b_services_add_title')?>"><?=CPinger::GetTranslate('b_services_add')?></a></i>
+            
+            <i><a href="?module=pinger&act=tasksadd"><?=CPinger::GetTranslate('b_tasks_add')?></a></i>
+          <i><a href="?module=pinger&act=settings"><?=CPinger::GetTranslate('b_settings')?></a></i>
+        </div>
+    </div>
+    <div class="clear"></div>
+
+</div>
+

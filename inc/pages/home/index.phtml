@@ -1,0 +1,925 @@
+<form action="" method="post" id="mainForm" enctype="multipart/form-data" target="_blank" name="send_generate">
+  <?
+  if(!empty($_SESSION['check_servers']))
+    {
+    ?>
+      <div class="result error" style="margin: 10px;">
+        <?=$_SESSION['check_servers']?>
+      </div>
+    <?
+    }
+  ?>
+
+
+   <?php
+   if(isset($_SESSION['home_savesettings']))
+      {
+      if($_SESSION['home_savesettings'] == 1)
+         {
+         ?>
+         <div class="result success"><?=CHome::GetTranslate('b_settings_save_success')?></div>
+            <?php
+         }
+      else
+         {
+         ?>
+         <div class="result error"><?=CHome::GetTranslate('b_settings_save_error')?></div>
+            <?php
+         }
+      }
+   ?>
+
+    <div class="main">
+        <div class="description">
+            <h1>
+               <?=CHome::GetTranslate('create_doorway')?>
+               <!--<?=CModel_helper::SwapLinks('uploadTo', $this->GetSettings()->Get('uploadTo', 'loc'), 'swapUploadTo', array('ftp'=>CHome::GetTranslate('on_ftp_server'), 'loc'=>CHome::GetTranslate('on_this_server'))) ?> -->
+            </h1>
+        </div>
+
+        <div class="form">
+            <div class="left" style="margin-right: 60px;">
+                <!-- ВЫБОР КЕЙВОРДОВ -->
+                <div class="box">
+                    <div class="name">
+                       <?=CHome::GetTranslate('b_keywords')?>
+                       <?=CModel_helper::SwapLinks('keysFrom', $this->GetSettings()->Get('keysFrom', 'list'), 'swapKeysFrom', array('file'=>CHome::GetTranslate('from_file'), 'list'=>CHome::GetTranslate('from_list'))) ?>
+                    </div>
+
+                    <input type="file" name="keysFromFile" id="keysFromFile" size="25"
+                           style="display: <?=$this->GetSettings()->Get('keysFrom', 'list') != 'list' ? 'block' : 'none' ?>;">
+                    <select name="keysFromList" id="keysFromList"
+                            style="width: 242px; display: <?=$this->GetSettings()->Get('keysFrom', 'list') == 'list' ? 'block' : 'none' ?>;">
+                       <?=CModel_helper::ListFiles('data/keywords', $this->GetSettings()->Get('keysFromList'))?>
+                    </select>
+                </div>
+
+                <div class="box">
+                    <i><input type="checkbox" name="keysRandom" id="keysRandom" onclick="swapKeysRandom(this);"
+                       <?=$this->GetSettings()->Get('keysRandom') == 'on' ? "checked='checked'" : NULL ?> class="cb">
+                        <label for="keysRandom"><?=CHome::GetTranslate('b_select_rand_keywords')?></label>
+                    </i>
+
+                    <div id="keysRandomBox" style="display:<?=$this->GetSettings()->Get('keysRandom') == 'on' ? "block" : "none" ?>">
+                       <?=CHome::GetTranslate('from')?>
+                       <input type="text" name="keysRandomMin" value="<?=$this->GetSettings()->Get('keysRandomMin', 150)?>" size="7">
+
+                       <?=CHome::GetTranslate('to')?>
+                       <input type="text" name="keysRandomMax" value="<?=$this->GetSettings()->Get('keysRandomMax', 250)?>" size="7">
+                    </div>
+
+                  <div id="keysShakenDiv" style="margin-top:7px;">
+                    <input type="checkbox" name="keysMix" id="keysMix"
+                     <?=$this->GetSettings()->Get('keysMix') == 'on' ? "checked='checked'" : NULL ?> class="cb">
+                    <label for="keysMix"><?=CHome::GetTranslate('b_keys_shaken')?></label>
+                  </div>
+                </div>
+
+                <!-- ВЫБОР ТЕКСТА -->
+                <div class="box">
+                    <div class="name">
+                       <?=CHome::GetTranslate('b_text')?>
+                       <?=CModel_helper::SwapLinks('textFrom', $this->GetSettings()->Get('textFrom', 'list'), 'swapTextFrom', array('file'=>CHome::GetTranslate('from_file'), 'list'=>CHome::GetTranslate('from_list'))) ?>
+                    </div>
+
+                    <input type="file" name="textFromFile" id="textFromFile" size="25"
+                           style="display: <?=$this->GetSettings()->Get('textFrom', 'list') != 'list' ? 'block' : 'none' ?>;">
+                    <select name="textFromList" id="textFromList"
+                            style="width: 242px; display: <?=$this->GetSettings()->Get('textFrom', 'list') == 'list' ? 'block' : 'none' ?>;">
+                       <?=CModel_helper::ListFiles(CModel_text::PATH_TEXTS, $this->GetSettings()->Get('textFromList'))?>
+                    </select>
+                </div>
+
+                <div class="box">
+                    <i><?=CHome::GetTranslate('b_url_doorway')?></i>
+                    <input type="text" name="nextUrl" size="37"
+                        value="<?=$this->GetSettings()->Get('nextUrl')?>" placeholder="www.example.com/mydoorway">
+                </div>
+
+                <!-- создание одностраничников -->
+                <div class="box">
+                    <input type="checkbox" name="onepage_create" <?=$this->GetSettings()->Get('onepage_create') == 'on' ? "checked='checked'" : NULL ?>
+                           id="onepage_create" class="cb" onclick="swapOnePage(this);"<?if(empty($this->m_plugins_access['onepage'])){?> disabled="disabled"<?}?>>
+                    <label for="onepage_create"><?=CHome::GetTranslate('b_onepage_create')?></label>
+                    <div id="onePageBox" style="<?=$this->GetSettings()->Get('onepage_create')!='on'?'display: none;':''?>">
+                        <i><?=CHome::GetTranslate('b_path_onepage')?></i>
+                        <input type="text" name="pathOnePage" value="<?=$this->GetSettings()->Get('onepage_create')!='on' ? '[KEYWORD]':$this->GetSettings()->Get('pathOnePage', '[KEYWORD]')?>" size="40" style="margin-bottom: 10px;">
+
+                        <input type="checkbox" name="onepage_oneword" <?=$this->GetSettings()->Get('onepage_oneword') == 'on' ? "checked='checked'" : NULL ?>
+                             id="onepage_oneword" class="cb" <?if(empty($this->m_plugins_access['onepage'])){?> disabled="disabled"<?}?>>
+                        <label for="onepage_oneword"><?=CHome::GetTranslate('b_onepage_oneword')?></label>
+
+                        <i><?=CHome::GetTranslate('b_onepage_dir_len')?>:
+                            <input type="text" name="onepage_dir_len" value="<?=$this->GetSettings()->Get('onepage_dir_len',63)?>" size="2">
+                        </i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="left">
+                <select name="uploadTo" onchange="ChangeUploadTo(this)">
+                  <option value="loc"<?=$this->GetSettings()->Get('uploadTo', 'loc') == 'loc'?' selected="selected"':''?>><?=CHome::GetTranslate('create_doorway')?> <?=CHome::GetTranslate('on_this_server')?></option>
+                  <option value="ftp"<?=$this->GetSettings()->Get('uploadTo', 'loc') == 'ftp'?' selected="selected"':''?>><?=CHome::GetTranslate('create_doorway')?> <?=CHome::GetTranslate('on_ftp_server')?></option>
+                </select>
+                <!-- FTP: СОЗДАТЬ ДОРВЕЙ НА ЭТОМ СЕРВЕРЕ -->
+                <div id="uploadToLocal"
+                     style="display: <?=$this->GetSettings()->Get('uploadTo', 'loc') != 'loc' ? 'none' : 'block' ?>;margin-top: 5px;">
+                    <div class="box">
+                        <i><?=CHome::GetTranslate('b_path_to_doorway')?></i>
+                        <input type="text" name="localPath" value="<?=$this->GetSettings()->Get('localPath', './mydoorway')?>" size="37" placeholder="../mydoorway">
+                    </div>
+                </div>
+
+                <!-- FTP: СОЗДАТЬ ДОРВЕЙ НА FTP-СЕРВЕРЕ -->
+                <div id="uploadToFtp" style="display: <?=$this->GetSettings()->Get('uploadTo', 'loc') == 'loc' ? 'none' : 'block' ?>;">
+                    <div class="box">
+                        <i><?=CHome::GetTranslate('b_ftp_server')?></i>
+                        <input type="text" name="ftpServer" value="<?=$this->GetSettings()->Get('ftpServer')?>" size="37" placeholder="ftp.example.com">
+                    </div>
+
+                    <div class="box">
+                        <i>
+                        <input type="checkbox" name="ftpAdvanced" id="ftpAdvanced" onclick="swapFtpAdvanced(this);" <?=$this->GetSettings()->Get('ftpAdvanced') == 'on' ? "checked='checked'" : NULL ?> class="cb">
+                        <label for="ftpAdvanced">Расширенный режим</label>
+                        </i>
+
+                        <div id="ftpAdvancedBox" style="display:<?=$this->GetSettings()->Get('ftpAdvanced') == 'on' ? "block" : "none" ?>; margin-top: 5px;">
+                            <input type="radio" id="ftpSFTP" name="ftpMode" value="sftp"<?=$this->GetSettings()->Get('ftpMode', 'sftp') == 'sftp' ? " checked='checked'" : null ?> class="rb">
+                            <label for="ftpSFTP">SFTP</label> &nbsp;
+
+                            <!--<input type="radio" id="ftpProxy" name="ftpMode"
+                                   value="proxy" <?=$this->GetSettings()->Get('ftpMode') == 'proxy' ? "checked='checked'" : null ?>
+                                   disabled="disabled" class="rb">
+                            <label for="ftpProxy">через прокси-сервер</label>
+                            -->
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <i><?=CHome::GetTranslate('b_ftp_login')?></i>
+                        <input type="text" name="ftpLogin" value="<?=$this->GetSettings()->Get('ftpLogin')?>" size="37">
+                    </div>
+
+                    <div class="box">
+                        <i><?=CHome::GetTranslate('b_password')?></i> <input
+                            type="password" name="ftpPassword" size="37">
+                    </div>
+
+                    <div class="box">
+                        <i><?=CHome::GetTranslate('b_path_to_doorway')?></i>
+                        <input type="text" name="ftpPath" value="<?=$this->GetSettings()->Get('ftpPath')?>" size="37" placeholder="www/mydoorway">
+                    </div>
+                  <div class="box">
+                    <input type="checkbox" name="ftp_proxy" <?=$this->GetSettings()->Get('ftp_proxy') == 'on' ? "checked='checked'" : NULL ?> id="ftp_proxy" class="cb">
+                    <label for="ftp_proxy"><?=CHome::GetTranslate('b_ftp_proxy')?></label>
+                  </div>
+                  <div class="box">
+                    <input type="checkbox" name="ftp_delayed" <?=$this->GetSettings()->Get('ftp_delayed') == 'on' ? "checked='checked'" : NULL ?> id="ftp_delayed" class="cb">
+                    <label for="ftp_delayed"><?=CHome::GetTranslate('b_ftp_delayed')?></label>
+                  </div>
+                  <div class="box">
+                    <input type="checkbox" name="ftp_delete_always" <?=$this->GetSettings()->Get('ftp_delete_always') == 'on' ? "checked='checked'" : NULL ?> id="ftp_delete_always" class="cb" onclick="CheckDeleayAlways(this,'ftp_delayed')">
+                    <label for="ftp_delete_always"><?=CHome::GetTranslate('b_ftp_delete_always')?></label>
+                  </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+
+            <div id="startBottom">
+                <input type="submit" value="<?=CHome::GetTranslate('b_create')?>" class="button create" name="a[start]">
+                <a href="javascript:Task.Save('send_generate',<?=CModel_task::TYPE_GENERATE?>)"
+                   class="add"><b>+</b><span><?=CHome::GetTranslate('add_task')?></span></a>
+            </div>
+
+          <div style="margin-top: 5px;">
+          <input type="checkbox" class="cb" name="settingsFromFile" id="settingsFromFile"<?=$this->GetSettings()->Get('settingsFromFile') == 'on' ? "checked='checked'" : NULL ?>> <span class="info"><?=CHome::GetTranslate('b_settings_from_file')?></span>
+          </div>
+
+        </div>
+
+    <div class="clear"></div>
+    </div>
+
+<div class="content">
+<div class="main">
+
+<div class="frame">
+    <h2><?=CHome::GetTranslate('b_setting_text')?></h2>
+
+    <!-- АЛГОРИТМ ГЕНЕРАЦИИ ТЕКСТА И ПЛОТНОСТЬ КЕЙВОРДОВ -->
+    <div class="box">
+        <i><?=CHome::GetTranslate('b_method_generate_text')?></i>
+        <select name="algorithm" style="width: 200px;" title="<?=CHome::GetTranslate('b_algoritm_generate_text')?>">
+        <option value="markov"
+           <?=$this->GetSettings()->Get('algorithm') == 'markov' ? "selected='selected'" : NULL ?>><?=CHome::GetTranslate('b_markov')?></option>
+        <option value="karlmarks"
+           <?=$this->GetSettings()->Get('algorithm') == 'karlmarks' ? "selected='selected'" : NULL ?>><?=CHome::GetTranslate('b_karlmarks')?></option>
+        <option value="simple"
+           <?=$this->GetSettings()->Get('algorithm') == 'simple' ? "selected='selected'" : NULL ?>><?=CHome::GetTranslate('b_simple')?></option>
+    </select>
+    </div>
+
+    <div class="box">
+        <i><?=CHome::GetTranslate('b_density_keywords_text')?></i>
+       <?=CHome::GetTranslate('from')?> <input type="text" name="keysDensityMin"
+                                               value="<?=$this->GetSettings()->Get('keysDensityMin', 2)?>"
+                                               size="2">
+       <?=CHome::GetTranslate('to')?> <input type="text" name="keysDensityMax"
+                                             value="<?=$this->GetSettings()->Get('keysDensityMax', 3)?>" size="2">
+    </div>
+
+    <div class="box" style="margin-bottom: 20px;">
+        <i><?=CHome::GetTranslate('b_keywords_color_text')?></i>
+        <input type="checkbox" name="keywordsColored" onclick="swapOnePageAdv('blockColorKeywords',this,'block');"  <?=$this->GetSettings()->Get('keywordsColored') == 'on' ? "checked='checked'" : NULL ?> id="keywordsColored" class="cb">
+          <label for="keywordsColored" title="<?=CHome::GetTranslate('b_need_keyord_color')?>"><?=CHome::GetTranslate('b_need_keyord_color')?></label>
+        <div id="blockColorKeywords" class="box" style="display:<?=$this->GetSettings()->Get('keywordsColored') == 'on' ? "block" : "none" ?>">
+          <i>
+          <input type="checkbox" name="colorKeywordRandom" <?=$this->GetSettings()->Get('colorKeywordRandom') == 'on' ? "checked='checked'" : NULL ?> id="colorKeywordRandom" class="cb">
+          <label for="colorKeywordRandom" title="<?=CHome::GetTranslate('b_keyword_color_rand')?>"><?=CHome::GetTranslate('b_keyord_color_rand')?></label>
+          </i>
+
+          <i><?=CHome::GetTranslate('b_keyword_color_set')?></i>
+           <textarea cols="30" rows="3" style="width: 100%;" name="colorKeywordSet" title="<?=CHome::GetTranslate('b_keyword_color_set_title')?>"><?=$this->GetSettings()->Get('colorKeywordSet')?></textarea>
+
+          <i>
+          <input type="checkbox" name="colorBackgroundKeywordRandom" <?=$this->GetSettings()->Get('colorBackgroundKeywordRandom') == 'on' ? "checked='checked'" : NULL ?> id="colorBackgroundKeywordRandom" class="cb">
+          <label for="colorBackgroundKeywordRandom" title="<?=CHome::GetTranslate('b_keyword_color_back_rand')?>"><?=CHome::GetTranslate('b_keyword_color_back_rand')?></label>
+          </i>
+          <i><?=CHome::GetTranslate('b_keyword_back_color_set')?></i>
+           <textarea cols="30" rows="3" style="width: 100%;" name="colorBackKeywordSet"><?=$this->GetSettings()->Get('colorBackKeywordSet')?></textarea>
+          <i><?=CHome::GetTranslate('b_density_keywords_color_text')?></i>
+
+          <i><input type="radio" class="cb" name="countKeyColorType" value="" <?=$this->GetSettings()->Get('countKeyColorType')==''?' checked="checked"':''?> >
+                    <?=CHome::GetTranslate('from')?> <input type="text" name="keysColorMin"
+                                                  value="<?=$this->GetSettings()->Get('keysColorMin', 2)?>"
+                                                  size="2">
+                    <?=CHome::GetTranslate('to')?> <input type="text" name="keysColorMax"
+                                                value="<?=$this->GetSettings()->Get('keysColorMax', 3)?>" size="2">
+
+          </i>
+          <i>
+          <input type="radio" class="cb" <?=$this->GetSettings()->Get('countKeyColorType')=='percent'?' checked="checked"':''?> value="percent" name="countKeyColorType">
+                    <?=CHome::GetTranslate('from')?> <input type="text" name="keysColorMinPercent"
+                                                  value="<?=$this->GetSettings()->Get('keysColorMinPercent', 30)?>"
+                                                  size="2">
+
+                    <?=CHome::GetTranslate('to')?> <input type="text" name="keysColorMaxPercent"
+                                                value="<?=$this->GetSettings()->Get('keysColorMaxPercent', 60)?>" size="2"> %
+
+</i>
+        </div>
+    </div>
+
+   <div class="box" style="margin-bottom: 20px;">
+        <i><?=CHome::GetTranslate('b_keywords_size_text')?></i>
+          <input type="checkbox" name="keywordsFont" onclick="swapOnePageAdv('blockSizeKeywords',this,'block');"  <?=$this->GetSettings()->Get('keywordsFont') == 'on' ? "checked='checked'" : NULL ?> id="keywordsFont" class="cb">
+          <label for="keywordsSize" title="<?=CHome::GetTranslate('b_need_keyord_size')?>"><?=CHome::GetTranslate('b_need_keyord_size')?></label>
+        <div id="blockSizeKeywords" class="box" style="display:<?=$this->GetSettings()->Get('keywordsFont') == 'on' ? "block" : "none" ?>">
+          <i><?=CHome::GetTranslate('b_keyword_size_number')?></i>
+
+          <i><input type="radio" class="cb" name="countKeyFontType" value="" <?=$this->GetSettings()->Get('countKeyFontType')==''?' checked="checked"':''?> >
+                    <?=CHome::GetTranslate('from')?> <input type="text" name="keysFontMin"
+                                                  value="<?=$this->GetSettings()->Get('keysFontMin', 1)?>"
+                                                  size="2">
+                    <?=CHome::GetTranslate('to')?> <input type="text" name="keysFontMax"
+                                                value="<?=$this->GetSettings()->Get('keysFontMax', 2)?>" size="2">
+
+          </i>
+          <i>
+          <input type="radio" class="cb" <?=$this->GetSettings()->Get('countKeyFontType')=='percent'?' checked="checked"':''?> value="percent" name="countKeyFontType">
+                    <?=CHome::GetTranslate('from')?> <input type="text" name="keysFontMinPercent"
+                                                  value="<?=$this->GetSettings()->Get('keysFontMinPercent', 10)?>"
+                                                  size="2">
+
+                    <?=CHome::GetTranslate('to')?> <input type="text" name="keysFontMaxPercent"
+                                                value="<?=$this->GetSettings()->Get('keysFontMaxPercent', 30)?>" size="2"> %
+
+</i>
+             <i><?=CHome::GetTranslate('b_keyword_size_change')?></i>
+                    <?=CHome::GetTranslate('from')?> <input type="text" name="keysSizeMinChange"
+                                                  value="<?=$this->GetSettings()->Get('keysSizeMinChange', 12)?>"
+                                                  size="2">
+                    <?=CHome::GetTranslate('to')?> <input type="text" name="keysSizeMaxChange"
+                                                value="<?=$this->GetSettings()->Get('keysSizeMaxChange', 18)?>" size="2"> px
+
+
+
+          <i><?=CHome::GetTranslate('b_keyword_font_set')?></i>
+           <textarea cols="30" rows="3" style="width: 100%;" name="fontKeywordSet"><?=$this->GetSettings()->Get('fontKeywordSet')?></textarea>
+
+        </div>
+    </div>
+
+    <div class="box" style="margin-bottom: 20px;">
+      <i><?=CHome::GetTranslate('b_keywords_sentence_text')?></i>
+      <input type="checkbox" name="sentenceSelect" onclick="swapOnePageAdv('blockSentence',this,'block');"  <?=$this->GetSettings()->Get('sentenceSelect') == 'on' ? "checked='checked'" : NULL ?> id="sentenceSelect" class="cb">
+      <label for="sentenceSelect" title="<?=CHome::GetTranslate('b_need_sentence')?>"><?=CHome::GetTranslate('b_need_sentence')?></label>
+      <div id="blockSentence" class="box" style="display:<?=$this->GetSettings()->Get('sentenceSelect') == 'on' ? "block" : "none" ?>">
+
+        <i>
+          <input type="checkbox" name="colorSentenceRandom" <?=$this->GetSettings()->Get('colorSentenceRandom') == 'on' ? "checked='checked'" : NULL ?> id="colorSentenceRandom" class="cb">
+          <label for="colorSentenceRandom" title="<?=CHome::GetTranslate('b_sentence_color_rand')?>"><?=CHome::GetTranslate('b_sentence_color_rand')?></label>
+        </i>
+
+        <i><?=CHome::GetTranslate('b_sentence_color_set')?></i>
+        <textarea cols="30" rows="3" style="width: 100%;" name="colorSentenceSet" title="<?=CHome::GetTranslate('b_sentence_color_set_title')?>"><?=$this->GetSettings()->Get('colorSentenceSet')?></textarea>
+
+        <i>
+          <input type="checkbox" name="colorBackgroundSentenceRandom" <?=$this->GetSettings()->Get('colorBackgroundSentenceRandom') == 'on' ? "checked='checked'" : NULL ?> id="colorBackgroundSentenceRandom" class="cb">
+          <label for="colorBackgroundSentenceRandom" title="<?=CHome::GetTranslate('b_sentence_color_back_rand')?>"><?=CHome::GetTranslate('b_sentence_color_back_rand')?></label>
+        </i>
+        <i><?=CHome::GetTranslate('b_sentence_back_color_set')?></i>
+        <textarea cols="30" rows="3" style="width: 100%;" name="colorBackSentenceSet" title="title="<?=CHome::GetTranslate('b_sentence_color_set_title')?>""><?=$this->GetSettings()->Get('colorBackSentenceSet')?></textarea>
+
+        <i>
+          <input type="checkbox" name="strongSentence" <?=$this->GetSettings()->Get('strongSentence') == 'on' ? "checked='checked'" : NULL ?> id="strongSentence" class="cb">
+          <label for="strongSentence" title="<?=CHome::GetTranslate('b_sentence_strong')?>"><?=CHome::GetTranslate('b_sentence_strong')?></label>
+        </i>
+
+        <i><?=CHome::GetTranslate('b_sentence_how_select')?></i>
+        
+        <i>
+          <?=CHome::GetTranslate('from')?> <input type="text" name="sentencesMin"
+                                                  value="<?=$this->GetSettings()->Get('sentencesMin', 0)?>"
+                                                  size="2">
+          <?=CHome::GetTranslate('to')?> <input type="text" name="sentencesMax"
+                                                value="<?=$this->GetSettings()->Get('sentencesMax', 1)?>" size="2">
+
+        </i>
+
+      </div>
+    </div>
+    <div class="box" style="margin-top: 10px;">
+        <div class="name">
+           <?=CHome::GetTranslate('density_selection')?><br>
+           <?=CModel_helper::SwapLinks('densitySelectionFor', $this->GetSettings()->Get('densitySelectionFor'), '', array('keys'=>CHome::GetTranslate('keywords'), 'phrases'=>CHome::GetTranslate('phrases'), 'all'=>CHome::GetTranslate('keywords_phrases'))) ?>
+        </div>
+        <i>
+           <?=CHome::GetTranslate('tags')?> <input type="checkbox" name="selectionEm"
+           <?=$this->GetSettings()->Get('selectionEm') == 'on' ? "checked='checked'" : NULL ?>
+                                                   id="tag_em" class="cb"> <label for="tag_em"
+                                                                                  title="<?=CHome::GetTranslate('italic')?>"><em>
+            &lt;em&gt;</em>
+        </label>, <input type="checkbox" name="selectionStrong"
+           <?=$this->GetSettings()->Get('selectionStrong') == 'on' ? "checked='checked'" : NULL ?>
+                         id="tag_strong" class="cb"> <label for="tag_strong"
+                                                            title="<?=CHome::GetTranslate('bold')?>"><strong>&lt;strong&gt;</strong>
+        </label></i>
+       <?=CHome::GetTranslate('from')?> <input type="text" name="densitySelectionMin"
+                                               value="<?=$this->GetSettings()->Get('densitySelectionMin', 10)?>"
+                                               size="2">
+       <?=CHome::GetTranslate('to')?> <input type="text" name="densitySelectionMax"
+                                             value="<?=$this->GetSettings()->Get('densitySelectionMax', 30)?>"
+                                             size="2"> %
+    </div>
+
+    <div class="box">
+        <i><input type="checkbox"
+                  name="linksDor" <?=$this->GetSettings()->Get('linksDor') == 'on' ? "checked='checked'" : NULL ?>
+                  id="linksDor" class="cb">
+            <label for="linksDor"><?=CHome::GetTranslate('b_links_this_dor')?></label></i>
+       <?=CHome::GetTranslate('from')?> <input type="text" name="linksDorFrom"
+                                               value="<?=$this->GetSettings()->Get('linksDorFrom',1 )?>" size="2">
+       <?=CHome::GetTranslate('to')?> <input type="text" name="linksDorTo"
+                                             value="<?=$this->GetSettings()->Get('linksDorTo', 2)?>" size="2">
+    </div>
+
+    <div class="box">
+        <i><input type="checkbox"
+                  name="linksOldDor" <?=$this->GetSettings()->Get('linksOldDor') == 'on' ? "checked='checked'" : NULL ?>
+                  id="linksOldDor" class="cb">
+            <label for="linksOldDor"><?=CHome::GetTranslate('b_links_old_dor')?></i>
+       <?=CHome::GetTranslate('from')?> <input type="text" name="linksOldDorFrom"
+                                               value="<?=$this->GetSettings()->Get('linksOldDorFrom', 1)?>" size="2">
+       <?=CHome::GetTranslate('to')?> <input type="text" name="linksOldDorTo"
+                                             value="<?=$this->GetSettings()->Get('linksOldDorTo', 2)?>" size="2">
+    </div>
+
+    <!-- СЛУЧАЙНЫЕ СТРОЧКИ С ТЕКСТОМ, КОЛИЧЕСТВО СТРАНИЦ БЕЗ КЕЙВОРДОВ -->
+    <div class="box">
+        <i title="<?=CHome::GetTranslate('b_count_empty_text_keywords_title')?>"><?=CHome::GetTranslate('b_count_empty_text_keywords')?></i>
+
+        <?=CHome::GetTranslate('from')?>
+        <input type="text" name="whitePagesMin" value="<?=$this->GetSettings()->Get('whitePagesMin', 10)?>" size="2">
+
+        <?=CHome::GetTranslate('to')?>
+        <input type="text" name="whitePagesMax" value="<?=$this->GetSettings()->Get('whitePagesMax', 20)?>" size="2">%
+    </div>
+
+    <div class="box">
+        <i title="<?=CHome::GetTranslate('b_sentense_paragraph')?>"><?=CHome::GetTranslate('b_sentense_paragraph')?></i>
+       <?=CHome::GetTranslate('from')?>
+       <input type="text" name="minSentensesParagraph" value="<?=$this->GetSettings()->Get('minSentensesParagraph', 3)?>" size="2">
+
+       <?=CHome::GetTranslate('to')?>
+       <input type="text" name="maxSentensesParagraph" value="<?=$this->GetSettings()->Get('maxSentensesParagraph', 5)?>" size="2">
+    </div>
+
+
+    <!-- РЕРАЙТ ТЕКСТА  -->
+    <!--<?=CHome::GetTranslate('b_rewrite_text')?>-->
+    <div class="box">
+        <i><input type="checkbox"
+                  name="rewriteShake" <?=$this->GetSettings()->Get('rewriteShake') == 'on' ? "checked='checked'" : NULL ?>
+                  id="rewriteShake" class="cb">
+            <label for="rewriteShake"><?=CHome::GetTranslate('b_rewrite_shake')?></label></i>
+       <?=CHome::GetTranslate('from')?> <input type="text" name="shakeFrom"
+                                               value="<?=$this->GetSettings()->Get('shakeFrom', 80)?>" size="2">
+       <?=CHome::GetTranslate('to')?> <input type="text" name="shakeTo"
+                                             value="<?=$this->GetSettings()->Get('shakeTo', 100)?>" size="2">%
+    </div>
+
+    <div class="box">
+        <i><input type="checkbox"
+                  name="rewriteChangeStruct" <?=$this->GetSettings()->Get('rewriteChangeStruct') == 'on' ? "checked='checked'" : NULL ?>
+                  id="rewriteChangeStruct" class="cb">
+            <label for="rewriteChangeStruct"><?=CHome::GetTranslate('b_rewrite_changestruct')?></label></i>
+       <?=CHome::GetTranslate('from')?>
+        <input type="text" name="changestructurFrom"
+               value="<?=$this->GetSettings()->Get('changestructurFrom', 80)?>" size="2">
+       <?=CHome::GetTranslate('to')?> <input type="text" name="changestructurTo"
+                                             value="<?=$this->GetSettings()->Get('changestructurTo', 100)?>"
+                                             size="2">%
+    </div>
+
+    <div class="box">
+        <i><input type="checkbox"
+                  name="rewriteAdj" <?=$this->GetSettings()->Get('rewriteAdj') == 'on' ? "checked='checked'" : NULL ?>
+                  id="rewriteAdj" class="cb">
+            <label for="rewriteAdj"><?=CHome::GetTranslate('b_rewrite_adj')?></label></i>
+       <?=CHome::GetTranslate('from')?> <input type="text" name="adjFrom"
+                                               value="<?=$this->GetSettings()->Get('adjFrom', 70)?>" size="2">
+       <?=CHome::GetTranslate('to')?> <input type="text" name="adjTo"
+                                             value="<?=$this->GetSettings()->Get('adjTo', 100)?>" size="2">%
+    </div>
+
+    <!-- СИНОНИМИЗАЦИЯ ТЕКСТА -->
+    <div class="box">
+        <i><?=CHome::GetTranslate('b_synonimizer_percent')?></i>
+       <?=CHome::GetTranslate('from')?>
+       <input type="text" name="synonimizerMin" value="<?=$this->GetSettings()->Get('synonimizerMin', 70)?>" size="2">
+
+       <?=CHome::GetTranslate('to')?>
+       <input type="text" name="synonimizerMax" value="<?=$this->GetSettings()->Get('synonimizerMax', 100)?>" size="2"> %
+    </div>
+
+    <div class="box">
+        <input type="checkbox" name="synonimizerRu"
+            <?=$this->GetSettings()->Get('synonimizerRu') == 'on' ? "checked='checked'" : NULL ?>
+                id="synonimizerRu" class="cb">
+        <label for="synonimizerRu"><?=CHome::GetTranslate('b_synonimizer_ru')?></label>
+                <?=!(CModel_synonimazer::CheckDictionaty('ru')) ? '<div class="info">' . CHome::GetTranslate('b_synonimizer_download') . '</div>' : ''?>
+        <br>
+
+        <input type="checkbox" name="synonimizerEn"
+            <?=$this->GetSettings()->Get('synonimizerEn') == 'on' ? "checked='checked'" : NULL ?>
+                id="synonimizerEn" class="cb">
+        <label for="synonimizerEn"><?=CHome::GetTranslate('b_synonimizer_en')?></label>
+        <?=!(CModel_synonimazer::CheckDictionaty('en')) ? '<div class="info">' . CHome::GetTranslate('b_synonimizer_download') . '</div>' : ''?>
+    </div>
+
+    <div class="box">
+       <?=CHome::GetTranslate('from')?>
+       <input type="text" name="fromTags" value="<?=$this->GetSettings()->Get('fromTags', 10)?>" size="2">
+
+       <?=CHome::GetTranslate('to')?>
+       <input type="text" name="toTags" value="<?=$this->GetSettings()->Get('toTags', 20)?>" size="2">
+
+       <?=CHome::GetTranslate('b_tags_count')?>
+    </div>
+
+    <div class="box">
+        <div class="name">
+           <?=CHome::GetTranslate('random_lines')?>
+           <?=CModel_helper::SwapLinks('randLinesFrom', $this->GetSettings()->Get('randLinesFrom'), 'swapRandLinesFrom', array('list'=>CHome::GetTranslate('from_list'), 'file'=>CHome::GetTranslate('from_file'))) ?>
+        </div>
+        <input type="file" name="randLinesFromFile" id="randLinesFromFile" size="25"
+               style="display:<?=$this->GetSettings()->Get('randLinesFrom', 'list') != 'list' ? 'block' : 'none' ?>;">
+        <select name="randLinesFromList" id="randLinesFromList"
+                style="width: 242px; display: <?=$this->GetSettings()->Get('randLinesFrom', 'list') == 'list' ? 'block' : 'none' ?>;">
+           <?=CModel_helper::ListFiles('data/randlines', $this->GetSettings()->Get('keysFromList'))?>
+        </select>
+
+        <div class="info"><?=CHome::GetTranslate('b_randlist_description')?></div>
+    </div>
+
+    <!-- КАРТИНКИ -->
+    <h2><?=CHome::GetTranslate('b_pictures')?></h2>
+    <div class="box">
+      <?=CHome::GetTranslate('b_image_default_path')?>
+      <select name="loadImagePath" id="loadImagePath" style="width: 200px; margin-top: 3px;">
+           <option value=""><?=CHome::GetTranslate('b_image_path_root')?></option>
+           <?=CModel_helper::ListDirs('data/images', $this->GetSettings()->Get('loadImagePath'))?>
+        </select>
+    </div>
+
+    <div class="box">
+        <input type="checkbox" name="imageWatermark"
+           <?=$this->GetSettings()->Get('imageWatermark') == 'on' ? "checked='checked'" : NULL ?>
+               id="imageWatermark" class="cb"> <label
+            for="imageWatermark"><?=CHome::GetTranslate('b_image_watermark')?></label>
+        <input type="text" name="imageWatermarkStr"
+           value="<?=$this->GetSettings()->Get('imageWatermarkStr', '[KEYWORD]')?>" size="35" style="margin-top: 3px;">
+    </div>
+
+    <div class="box">
+        <input type="checkbox" name="imageCrop"
+           <?=$this->GetSettings()->Get('imageCrop') == 'on' ? "checked='checked'" : NULL ?>
+               id="imageCrop" class="cb"> <label for="imageCrop"><?=CHome::GetTranslate('b_image_crop')?></label>
+    <br>
+        <input type="checkbox" name="imageInvert"
+           <?=$this->GetSettings()->Get('imageInvert') == 'on' ? "checked='checked'" : NULL ?>
+               id="imageInvert" class="cb"> <label for="imageInvert"><?=CHome::GetTranslate('b_image_invert')?></label>
+    <br>
+        <input type="checkbox" name="imageMirror"
+           <?=$this->GetSettings()->Get('imageMirror') == 'on' ? "checked='checked'" : NULL ?>
+               id="imageMirror" class="cb"> <label for="imageMirror"><?=CHome::GetTranslate('b_image_mirror')?></label>
+    <br>
+        <input type="checkbox" name="imageNegatif"
+           <?=$this->GetSettings()->Get('imageNegatif') == 'on' ? "checked='checked'" : NULL ?>
+               id="imageNegatif" class="cb"> <label for="imageNegatif"><?=CHome::GetTranslate('b_image_negatif')?></label>
+    <br>
+        <input type="checkbox" name="imageEmboss"
+           <?=$this->GetSettings()->Get('imageEmboss') == 'on' ? "checked='checked'" : NULL ?>
+               id="imageEmboss" class="cb"> <label for="imageEmboss"><?=CHome::GetTranslate('b_image_emboss')?></label>
+    <br>
+        <input type="checkbox" name="imageGray"
+           <?=$this->GetSettings()->Get('imageGray') == 'on' ? "checked='checked'" : NULL ?>
+               id="imageGray" class="cb"> <label for="imageGray"><?=CHome::GetTranslate('b_image_gray')?></label>
+    <br>
+        <input type="checkbox" name="imageFilenameKeyword"
+           <?=$this->GetSettings()->Get('imageFilenameKeyword') == 'on' ? "checked='checked'" : NULL ?>
+               id="imageFilenameKeyword" class="cb"> <label
+            for="imageFilenameKeyword"><?=CHome::GetTranslate('b_image_filename_keyword')?></label>
+    </div>
+</div>
+
+
+<div class="frame">
+    <!-- ШАБЛОН, ТИП ДОРВЕЯ И НАЗВАНИЯ СТРАНИЦ  -->
+    <h2><?=CHome::GetTranslate('b_page_settings')?></h2>
+
+    <div class="box">
+        <i><?=CHome::GetTranslate('b_template')?></i>
+        <select name="template" id="template" style="width: 200px;">
+           <?=CModel_helper::ListDirsSubDirs(CModel_template::TEMPLATE_PATH, $this->GetSettings()->Get('template'),array('index.html','page.html'))?>
+        </select>
+      <br>
+      <input type="checkbox" name="random_template"
+       <?=$this->GetSettings()->Get('random_template') == 'on' ? "checked='checked'" : NULL ?>
+             id="random_template" class="cb"> <label
+       for="random_template"><?=CHome::GetTranslate('b_random_template')?></label>
+
+    </div>
+
+    <div class="box">
+        <i><?=CHome::GetTranslate('b_type_doorways')?></i>
+        <select name="type" style="width: 200px;" onchange="swapPageType(this.value);">
+            <option value="static"
+               <?=$this->GetSettings()->Get('type') == 'static' ? "selected='selected'" : NULL ?>><?=CHome::GetTranslate('static')?>
+            </option>
+            <option value="dynamic"
+               <?=$this->GetSettings()->Get('type') == 'dynamic' ? "selected='selected'" : NULL ?>><?=CHome::GetTranslate('dynamic')?>
+            </option>
+        </select>
+    </div>
+
+    <div class="box">
+        <div id="staticPage"
+             style="display:<?=($this->GetSettings()->Get('type') == 'static' || $this->GetSettings()->Get('type') == NULL) ? "block" : "none" ?>;">
+            <i><?=CHome::GetTranslate('b_page_name')?>
+               <?=CModel_helper::SwapLinks('staticPageNamesFrom', $this->GetSettings()->Get('staticPageNamesFrom'), 'swapStaticPageNamesFrom', array('list'=>CHome::GetTranslate('from_list'), 'my'=>CHome::GetTranslate('another'))) ?>
+            </i>
+
+            <div id="staticPageNamesBlock"
+                 style="display:<?=$this->GetSettings()->Get('staticPageNamesFrom') == null || $this->GetSettings()->Get('staticPageNamesFrom') == 'list' ? 'inline' : 'none' ?>">
+                <span style="color: gray;">example.com/</span>
+                <select name="staticPageName">
+                    <option value="[KEYWORD].html" <?=$this->GetSettings()->Get('staticPageName')=='[KEYWORD].html' ? 'selected="selected"' : null ?>>keyword.html</option>
+                    <option value="[N].html" <?=$this->GetSettings()->Get('staticPageName')=='[N].html' ? 'selected="selected"' : null ?>>123.html</option>
+                    <option value="[TOPIC]/[KEYWORD].html" disabled="disabled">topic/keyword.html</option>
+                </select>
+            </div>
+
+            <div id="staticPageNameBlock"
+                 style="display:<?=$this->GetSettings()->Get('staticPageNamesFrom') == 'my' ? 'block' : 'none' ?>">
+                <span style="color: gray;">example.com/</span>
+                <input type="text" name="staticPageNameCustom" id="staticPageNameCustom"
+                       value="<?=$this->GetSettings()->Get('staticPageNameCustom')?>" size="19">
+                <a href="javascript:myExamples.Get('staticPageNameCustom')" class="example">&hArr;</a>
+            </div>
+        </div>
+
+        <div id="dynamicPage"
+             style="display:<?=($this->GetSettings()->Get('type') == 'dynamic') ? "block" : "none" ?>;">
+            <i><?=CHome::GetTranslate('b_page_name')?>
+               <?=CModel_helper::SwapLinks('dynamicPageNamesFrom', $this->GetSettings()->Get('dynamicPageNamesFrom'), 'swapDynamicPageNamesFrom', array('list'=>CHome::GetTranslate('from_list'), 'my'=>CHome::GetTranslate('another'))) ?>
+            </i>
+
+            <div id="dynamicPageNamesBlock"
+                 style="display:<?=$this->GetSettings()->Get('dynamicPageNamesFrom') == null || $this->GetSettings()->Get('dynamicPageNamesFrom') == 'list' ? 'inline' : 'none' ?>">
+                <span style="color: gray;">example.com/</span>
+                <select name="dynamicPageName">
+                    <option value="?id=[N]" <?=$this->GetSettings()->Get('dynamicPageName')=='?id=[N]' ? 'selected="selected"' : null ?>>?id=123</option>
+                    <option value="?page=[N]" <?=$this->GetSettings()->Get('dynamicPageName')=='?page=[N]' ? 'selected="selected"' : null ?>>?page=123</option>
+                    <option value="?id=[N]&amp;topic=[KEYWORD]" <?=$this->GetSettings()->Get('dynamicPageName')=='?id=[N]&topic=[KEYWORD]' ? 'selected="selected"' : null ?>>?id=123&amp;topic=keyword</option>
+                    <option value="[TOPIC]/[KEYWORD]" <?=$this->GetSettings()->Get('dynamicPageName')=='[TOPIC]/[KEYWORD]' ? 'selected="selected"' : null ?>>/topic/keyword</option>
+                </select>
+            </div>
+
+            <div id="dynamicPageNameBlock"
+                 style="display:<?=$this->GetSettings()->Get('dynamicPageNamesFrom') == 'my' ? 'block' : 'none' ?>">
+                <span style="color: gray;">example.com/</span>
+                <input type="text" name="dynamicPageNameCustom" id="dynamicPageNameCustom"
+                       value="<?=$this->GetSettings()->Get('dynamicPageNameCustom')?>" size="19">
+                <a href="javascript:myExamples.Get('dynamicPageNameCustom')" class="example">&hArr;</a><br>
+                <input type="checkbox" name="delayedPublication"
+                   <?/*$this->GetSettings()->Get('delayedPublication')=='on' ? "checked='checked'" : NULL*/ ?>
+                       id="delayedPublication" class="cb" disabled="disabled"> <label
+                    for="delayedPublication"><?=CHome::GetTranslate('b_delayed_publication')?></label><br>
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <input type="checkbox" name="urlsOnLanguage"
+           <?=$this->GetSettings()->Get('urlsOnLanguage') == 'on' ? "checked='checked'" : NULL ?>
+               id="urlsOnLanguage" class="cb"> <label
+            for="urlsOnLanguage"><?=CHome::GetTranslate('b_urls_language')?></label>
+    </div>
+  <div class="box">
+    <input type="checkbox" name="urlNoLower"
+     <?=$this->GetSettings()->Get('urlNoLower') == 'on' ? "checked='checked'" : NULL ?>
+           id="urlNoLower" class="cb"> <label
+   for="urlNoLower"><?=CHome::GetTranslate('b_urls_no_lower')?></label>
+  </div>
+    <div class="box">
+        <i><?=CHome::GetTranslate('b_format_title_page')?></i>
+        <input type="text" name="pageTitle" value="<?=$this->GetSettings()->Get('pageTitle', '[UC-KEYWORD] / Acme Corp.')?>" size="35">
+    </div>
+
+    <div class="box">
+        <i>Meta Description:</i>
+        <input type="text" name="metaDescription" value="<?=$this->GetSettings()->Get('metaDescription', 'About [KEYWORD]')?>" size="35">
+    </div>
+
+    <div class="box">
+        <input type="checkbox" name="createSiteMap"
+           <?=$this->GetSettings()->Get('createSiteMap') == 'on' ? "checked='checked'" : NULL ?>
+               id="createSiteMap" class="cb"> <label
+            for="createSiteMap"><?=CHome::GetTranslate('b_create_sitemap')?></label><br>
+        <input type="checkbox" name="createSiteMapHtml"
+           <?=$this->GetSettings()->Get('createSiteMapHtml') == 'on' ? "checked='checked'" : NULL ?>
+               id="createSiteMapHtml" class="cb"> <label
+            for="createSiteMapHtml"><?=CHome::GetTranslate('b_create_sitemap_html')?></label><br>
+
+        <input type="checkbox" name="createRss"
+           <?=$this->GetSettings()->Get('createRss') == 'on' ? "checked='checked'" : NULL ?>
+               id="createRss" class="cb"> <label for="createRss"><?=CHome::GetTranslate('b_create_rss')?></label>
+    </div>
+
+    <div class="box">
+      <input type="checkbox" name="is_commpress"
+       <?=$this->GetSettings()->Get('is_commpress') == 'on' ? "checked='checked'" : NULL ?>
+             id="is_commpress" class="cb"> <label for="is_commpress" title="<?=CHome::GetTranslate('b_is_commpress_title')?>"><?=CHome::GetTranslate('b_is_commpress')?></label><br>
+      <input type="checkbox" name="is_js_obfuscator" onclick="swapOnePageAdv('ObfuscatorsBox', this,'block')"
+       <?=$this->GetSettings()->Get('is_js_obfuscator') == 'on' ? "checked='checked'" : NULL ?>
+             id="is_js_obfuscator" class="cb"> <label for="is_js_obfuscator" title="<?=CHome::GetTranslate('b_is_js_obfuscator')?>"><?=CHome::GetTranslate('b_is_js_obfuscator')?></label>
+
+       <div id="ObfuscatorsBox" style="display: <?=$this->GetSettings()->Get('is_js_obfuscator') == 'on' ? "block" : "none" ?>; margin-left:15px;">
+  <input id="ObfuscatorType_pr1" class="cb" type="radio" value="pr1" <?=$this->GetSettings()->Get('obfuscatorType') == 'pr1' ? "checked='checked'" : NULL ?> name="obfuscatorType">
+<label for="ObfuscatorType_pr1"><?=CHome::GetTranslate('b_js_obfuscator_primer1')?></label>
+<br>
+  <input id="ObfuscatorType_pr2" class="cb" type="radio" value="pr2" <?=$this->GetSettings()->Get('obfuscatorType') == 'pr1' ? "checked='checked'" : NULL ?> name="obfuscatorType">
+<label for="ObfuscatorType_pr2"><?=CHome::GetTranslate('b_js_obfuscator_primer2')?></label>
+<br>
+       </div>
+    </div>
+
+    <div class="box">
+        <i><?=CHome::GetTranslate('b_links_go')?>:</i>
+        <textarea name="linksGo" style="width: 100%;" rows="3"
+                  cols="30"><?=htmlspecialchars($this->GetSettings()->Get('linksGo', 'http://www.getredbutton.com?key=[KEYWORD]&partner=123'))?></textarea>
+
+        <div class="info">
+           <?=CHome::GetTranslate('b_links_go_desc')?>
+        </div>
+    </div>
+
+    <div class="box">
+        <i><?=CHome::GetTranslate('b_links_go_html')?>:</i>
+        <textarea name="goLinkHtml" id="goLinkHtml" style="width: 100%;" cols="30"
+                  rows="3"><?=htmlspecialchars($this->GetSettings()->Get('goLinkHtml', '<a href="[GO-URL]">More about [KEYWORD]...</a>'))?></textarea>
+
+        <div class="info">
+           <?=CHome::GetTranslate('b_go_link_html_description')?>
+        </div>
+    </div>
+
+
+    <!-- КАТЕГОРИИ -->
+    <h2><?=CHome::GetTranslate('b_page_categories')?></h2>
+    <div class="box">
+        <i><?=CHome::GetTranslate('b_categories')?>:</i>
+        <textarea name="keywordsCategoies" style="width: 100%;" rows="4"
+                  cols="30"><?=htmlspecialchars($this->GetSettings()->Get('keywordsCategoies', ''))?></textarea>
+
+        <div class="info">
+           <?=CHome::GetTranslate('b_categories_info')?>
+        </div>
+    </div>
+
+    <div class="box">
+        <input type="checkbox" name="autoCategories" <?=$this->GetSettings()->Get('autoCategories') == 'on' ? "checked='checked'" : NULL ?> id="autoCategories" class="cb">
+        <label for="autoCategories"><?=CHome::GetTranslate('b_auto_categories')?></label>
+    </div>
+
+    <div class="box">
+        <i><?=CHome::GetTranslate('b_template_auto_categories')?></i>
+        <input type="text" name="templateAutoCategories" id="templateAutoCategories"
+            title="<?=CHome::GetTranslate('b_auto_categories_info')?>"
+            value="<?=$this->GetSettings()->Get('templateAutoCategories', 'path-[N]')?>"
+            size="35">
+    </div>
+
+    <div class="box">
+        <i><?=CHome::GetTranslate('b_count_auto_categories')?></i> <?=CHome::GetTranslate('from')?>
+            <input type="text" name="minCountAutoCategories" id="minCountAutoCategories"
+                   title="<?=CHome::GetTranslate('b_min_categories_info')?>"
+                   value="<?=$this->GetSettings()->Get('minCountAutoCategories', '10')?>" size="2">
+           <?=CHome::GetTranslate('to')?>
+           <input type="text" name="maxCountAutoCategories" id="maxCountAutoCategories"
+                title="<?=CHome::GetTranslate('b_max_categories_info')?>"
+                value="<?=$this->GetSettings()->Get('maxCountAutoCategories', '25')?>"
+                size="2">
+    </div>
+</div>
+
+
+<div class="frame" style="margin-right: 0;">
+    <!-- РЕДИРЕКТ -->
+    <h2><?=CHome::GetTranslate('b_redirect')?></h2>
+
+    <div class="box" id="redirect_list">
+        <input type="radio" name="redirectType"
+           <?=$this->GetSettings()->Get('redirectType') == '' ? "checked='checked'" : NULL ?>
+               id="redirectType" class="cb" value=""> <label
+            for="redirectType"><?=CHome::GetTranslate('b_redirect_type_none')?></label>
+    <br>
+        <input type="radio" name="redirectType"
+           <?=$this->GetSettings()->Get('redirectType') == 'div' ? "checked='checked'" : NULL ?>
+               id="redirectType_div" class="cb" value="div"> <label
+            for="redirectType_div"><?=CHome::GetTranslate('b_redirect_type_div')?></label>
+    <br>
+        <input type="radio" name="redirectType"
+           <?=$this->GetSettings()->Get('redirectType') == 'iframe' ? "checked='checked'" : NULL ?>
+               id="redirectType_iframe" class="cb" value="iframe"> <label
+            for="redirectType_iframe"><?=CHome::GetTranslate('b_redirect_type_iframe')?></label>
+    <br>
+        <input type="radio" name="redirectType"
+           <?=$this->GetSettings()->Get('redirectType') == 'iframe_many' ? "checked='checked'" : NULL ?>
+               id="redirectType_iframe_many" class="cb" value="iframe_many"> <label
+            for="redirectType_iframe_many"><?=CHome::GetTranslate('b_redirect_type_iframe_many')?></label>
+    </div>
+
+
+    <!-- КЛОАКИНГ -->
+    <h2><?=CHome::GetTranslate('b_cloaking')?></h2>
+
+    <div class="box">
+        <input type="radio" name="cloakingType"
+           <?=$this->GetSettings()->Get('cloakingType') == '' ? "checked='checked'" : NULL ?>
+               id="cloakingType" class="cb" value="" onclick="Cloaking.CheckingParams(this);"> <label
+            for="cloakingType"><?=CHome::GetTranslate('b_cloaking_type_none')?></label>
+        <br>
+        <input type="radio" name="cloakingType"
+           <?=$this->GetSettings()->Get('cloakingType') == 'htaccess' ? "checked='checked'" : NULL ?>
+               id="cloakingType_htaccess" class="cb" value="htaccess" onclick="Cloaking.CheckingParams(this)"> <label
+            for="cloakingType_htaccess"><?=CHome::GetTranslate('b_cloaking_type_htaccess')?></label>
+        <br>
+        <input type="radio" name="cloakingType"
+           <?=$this->GetSettings()->Get('cloakingType') == 'js' ? "checked='checked'" : NULL ?>
+               id="cloakingType_js" class="cb" value="js" onclick="Cloaking.CheckingParams(this)"> <label
+            for="cloakingType_js"><?=CHome::GetTranslate('b_cloaking_type_js')?></label>
+        <br>
+        <input type="radio" name="cloakingType"
+           <?=$this->GetSettings()->Get('cloakingType') == 'php' ? "checked='checked'" : NULL ?>
+               id="cloakingType_php" class="cb" value="php" onclick="Cloaking.CheckingParams(this)"> <label
+            for="cloakingType_php"><?=CHome::GetTranslate('b_cloaking_type_php')?></label>
+    </div>
+
+    <div class="box">
+        <?=CHome::GetTranslate('b_redirect_link')?>:<br>
+        <textarea name="redirectLink" id="redirectLink" cols="30" rows="5" style="width: 100%; margin-top:3px;"><?=$this->GetSettings()->Get('redirectLink', 'http://www.getredbutton.com?key=[KEYWORD]&partner=123')?></textarea>
+    </div>
+
+    <div class="box">
+        <?=CHome::GetTranslate('b_redirect_type_urls')?>:<br><br>
+        <input type="radio" name="redirectUrlType"
+         <?=$this->GetSettings()->Get('redirectUrlType') == '' ? "checked='checked'" : NULL ?>
+               id="redirectUrlType" class="cb" value=""> <label
+         for="redirectUrlType"><?=CHome::GetTranslate('b_redirect_type_random')?></label>
+        <br>
+        <input type="radio" name="redirectUrlType"
+         <?=$this->GetSettings()->Get('redirectUrlType') == 'page' ? "checked='checked'" : NULL ?>
+               id="cloakingType_page" class="cb" value="page"> <label
+         for="cloakingType_page"><?=CHome::GetTranslate('b_redirect_type_page')?></label>
+        <br>
+        <input type="radio" name="redirectUrlType"
+         <?=$this->GetSettings()->Get('redirectUrlType') == 'site' ? "checked='checked'" : NULL ?>
+               id="cloakingType_site" class="cb" value="site"> <label
+         for="cloakingType_site"><?=CHome::GetTranslate('b_redirect_type_site')?></label>
+    </div>
+
+
+    <!-- ССЫЛКИ -->
+    <h2><?=CHome::GetTranslate('b_settings_action')?></h2>
+
+    <div class="box">
+        <input type="checkbox" name="saveLink"
+           <?=$this->GetSettings()->Get('saveLink') == 'on' ? "checked='checked'" : NULL ?>
+           id="saveLink" class="cb">
+        <label for="saveLink"><?=CHome::GetTranslate('b_save_link')?>:</label>
+        <select name="saveLinkPath" id="saveLinkPath" style="width: 200px; margin-top: 3px;">
+           <?=CModel_helper::ListDirs('data/links', $this->GetSettings()->Get('saveLinkPath'))?>
+        </select>
+    </div>
+
+    <div class="box">
+        <input type="checkbox" name="saveLinkOne"
+           <?=$this->GetSettings()->Get('saveLinkOne') == 'on' ? "checked='checked'" : NULL ?> id="saveLinkOne" class="cb">
+           <label for="saveLinkOne"><?=CHome::GetTranslate('b_save_link_one_file')?></label>
+    </div>
+
+    <div class="box">
+        <input type="checkbox" name="projectXrumer"
+           <?=$this->GetSettings()->Get('projectXrumer') == 'on' ? "checked='checked'" : NULL ?>
+               id="projectXrumer" class="cb"> <label
+            for="projectXrumer"><?=CHome::GetTranslate('b_xrumer_project')?></label>
+    </div>
+
+ <!-- ZIP-архивирование -->
+    <div class="box">
+        <input type="checkbox"
+               name="archive_zip" <?=$this->GetSettings()->Get('archive_zip') == 'on' ? "checked='checked'" : NULL ?>
+               id="archive_zip" class="cb"> <label
+            for="archive_zip"><?=CHome::GetTranslate('b_archive_zip')?></label>
+    </div>
+
+    <div class="box">
+        <input type="checkbox"
+               name="un_archive_zip" <?=$this->GetSettings()->Get('un_archive_zip') == 'on' ? "checked='checked'" : NULL ?>
+               id="un_archive_zip" class="cb"> <label
+            for="un_archive_zip"><?=CHome::GetTranslate('b_un_archive_zip')?></label>
+    </div>
+
+    <div class="box">
+        <input type="checkbox"
+               name="pinger_task" <?=$this->GetSettings()->Get('pinger_task') == 'on' ? "checked='checked'" : NULL ?>
+               id="pinger_task" class="cb"> <label
+            for="pinger_task"><?=CHome::GetTranslate('b_pinger_task')?></label>
+    </div>
+
+
+
+</div>
+
+<div class="clear"></div>
+
+
+<!-- НАСТРОЙКИ -->
+<div style="text-align: center;">
+    <?=CHome::GetTranslate('b_settings')?>
+    <select name="settings" onchange="document.location='?a[changesettings]&n='+this.value" style="width: 150px;">
+        <option value="default"><?=CHome::GetTranslate('b_settings_standart')?></option>
+       <?php
+       $list_settings=$this->GetSettings()->GetListConfigsCheck();
+       if(!empty($list_settings) && is_array($list_settings))
+          {
+          foreach($list_settings as $id_set=>$value_set)
+             {
+             ?>
+                 <option value="<?=$id_set?>"<?=($id_set == $this->m_current_setting) ? ' selected="selected"' : ''?>><?=$value_set?></option>
+                <?php
+             }
+          }
+       ?>
+    </select>
+
+    <input type="text" name="settings_name" value="" title="<?=CHome::GetTranslate('b_new_settings')?>">
+
+    <?php
+    if($this->m_current_setting!='default')
+        {?>
+        <a href="?a[deletesettings]&name=<?=$this->m_current_setting?>" class="delete" onclick="return confirm('<?=CHome::GetTranslate('b_sure_delete_settings')?>')"><?=CHome::GetTranslate('b_delete_settings')?></a>
+    <?php
+        }?>
+    <br>
+    <input type="submit" name="a[savesettings]" value="<?=CHome::GetTranslate('b_save')?>"  onclick="$('mainForm').target='_top';" style="width: 100px; height: 30px; margin-top: 10px;">
+</div>
+
+
+</div>
+</div>
+
+</form>

@@ -1,0 +1,2 @@
+test@google.com|pass1
+test2@google.com|pass2

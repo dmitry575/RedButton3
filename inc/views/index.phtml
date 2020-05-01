@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="robots" content="noindex">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="styles/styles.css?v3" type="text/css" rel="stylesheet">
+    <title>RedButton &mdash; <?=$CUR_PAGE->GetTitle()?></title>
+</head>
+
+<body>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/ajax.js"></script>
+<script type="text/javascript" src="js/task.js"></script>
+<script type="text/javascript" src="js/links.js"></script>
+<script type="text/javascript" src="js/templates.js"></script>
+<script type="text/javascript" src="js/api.js"></script>
+<ul class="menu">
+    <li<?=!isset($_GET['module']) ? " class='selected'" : null?>><a 
+            href="./"><?=CHome::GetTranslate('b_main')?></a></li>
+    <li<?=isset($_GET['module']) && $_GET['module'] == 'tasks' ? " class='selected'" : null?>><a
+            href="?module=tasks"><?=CHome::GetTranslate('b_tasks')?></a></li>
+    <li<?=isset($_GET['module']) && $_GET['module'] == 'links' ? " class='selected'" : null?>><a
+            href="?module=links"><?=CHome::GetTranslate('b_links')?></a></li>
+    <li<?=isset($_GET['module']) && $_GET['module'] == 'xrumer' ? " class='selected'" : null?>><a
+            href="?module=xrumer"><?=CHome::GetTranslate('b_xrumer')?></a></li>
+    <li<?=isset($_GET['module']) && $_GET['module'] == 'image' ? " class='selected'" : null?>><a
+            href="?module=image"><?=CHome::GetTranslate('b_module_image')?></a></li>
+    <li<?=isset($_GET['module']) && $_GET['module'] == 'texts' ? " class='selected'" : null?>><a
+            href="?module=texts"><?=CHome::GetTranslate('b_module_texts')?></a></li>
+    <li<?=isset($_GET['module']) && $_GET['module'] == 'video' ? " class='selected'" : null?>><a
+            href="?module=video"><?=CHome::GetTranslate('b_module_video')?></a></li>
+    <li<?=isset($_GET['module']) && $_GET['module'] == 'templates' ? " class='selected'" : null?>><a
+            href="?module=templates"><?=CHome::GetTranslate('b_templates')?></a></li>
+    <li<?=isset($_GET['module']) && $_GET['module'] == 'translate' ? " class='selected'" : null?>><a
+            href="?module=translate"><?=CHome::GetTranslate('b_translate')?></a></li>
+    <li<?=isset($_GET['module']) && $_GET['module'] == 'pinger' ? " class='selected'" : null?>><a
+            href="?module=pinger"><?=CHome::GetTranslate('b_pinger')?></a></li>
+  <li<?=isset($_GET['module']) && $_GET['module'] == 'upload' ? " class='selected'" : null?>><a
+     href="?module=upload"><?=CHome::GetTranslate('b_modul_upload')?></a></li>
+  <li<?=isset($_GET['module']) && $_GET['module'] == 'settings' ? " class='selected'" : null?>><a
+            href="?module=settings"><?=CHome::GetTranslate('b_modul_settings')?></a></li>
+    <li<?=isset($_GET['module']) && $_GET['module'] == 'api' ? " class='selected'" : null?>><a 
+            href="?module=api">API</a>
+    </li>
+</ul>
+
+<?php
+$CUR_PAGE->show(null);
+//---
+$last_build=CModel_news::GetLastBuild();
+$isNewBuild=!empty($last_build) && $last_build != $BUILD;
+?>
+
+<div style="padding: 10px; color: gray; position: relative; font-size: 0.85em; ">
+  <?=$TRANSLATE[$LNG]['bottom_page']?>.<?=$BUILD?>
+  <a href="http://support.getredbutton.com/<?=$LNG?>/download" style="<?=$isNewBuild ? 'color: #DF3E29; ' : null ?> margin: 0 10px;" target="_blank">
+      <?= $isNewBuild ? $TRANSLATE[$LNG]['new_version'] . ' 3.' . $last_build : $TRANSLATE[$LNG]['download_last_version']?></a>
+  
+  <a href="http://support.getredbutton.com/<?=$LNG?>" style="; margin-right: 10px;" target="_blank"><?=$TRANSLATE[$LNG]['site_techsupport']?></a>
+  
+  <a href="?module=news" style="margin-right: 10px;"><?=CHome::GetTranslate('b_news')?></a>
+  
+  <a href="http://www.getredbutton.com/ru/start/" target="_blank" style="margin-right: 10px;"><?=CHome::GetTranslate('b_help')?></a>
+  
+  <a href="?module=plugins"><?=CHome::GetTranslate('b_plugins')?></a>
+  
+  
+  <div style="position: absolute; right: 10px; top: 10px; text-align: right;">
+  <span class="langmenu"><?php CModel_lng::GetMainMenu(); ?></span>
+  <a href="?logout=1" style="margin-left: 20px;"><?=$TRANSLATE[$LNG]['exit']?></a>
+  
+  </div>
+  
+  <?
+  if(CModel_news::IsNeedRequestToServer())
+     {
+     ?>
+         <script type="text/javascript">
+             window.setTimeout(News.GetLast, 1000);
+         </script>
+
+        <?php
+     }
+  ?>
+</div>   
+
+</body>
+</html>

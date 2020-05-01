@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XRumerProject>
+  <PrimarySection>
+    <ProjectName>[PROJECT]</ProjectName>
+    <NickName>[NICK]</NickName>
+    <RealName>[REALNAME]</RealName>
+    <Password>[PASS]</Password>
+    <EmailAddress>[EMAIL]</EmailAddress>
+    <EmailPassword>[EMAIL_PASS]</EmailPassword>
+    <EmailLogin>[EMAIL_LOGIN]</EmailLogin>
+    <EmailPOP>[EMAIL_POP]</EmailPOP>
+    <Homepage>[URL]</Homepage>
+    <ICQ>#random[111111..399999999]</ICQ>
+    <City>[CITY]</City>
+    <Country>[COUNTRY]</Country>
+    <Occupation>[OCCUP]</Occupation>
+    <Interests>[INTERES]</Interests>
+    <Signature></Signature>
+    <UnknownFields></UnknownFields>
+    <PollTitle></PollTitle>
+    <PollOption1></PollOption1>
+    <PollOption2></PollOption2>
+    <PollOption3></PollOption3>
+    <PollOption4></PollOption4>
+    <PollOption5></PollOption5>
+  </PrimarySection>
+  <SecondarySection>
+    <Subject1>[RAND_TEXT]</Subject1>
+    <Subject2>[RAND_TEXT]</Subject2>
+    <PostText>
+[color=green][size=24][RAND_TEXT][/size][/color]
+[RAND_TEXT] [RAND_URL] [RAND_TEXT]
+  </PostText> 
+ <Prior>бизнес
+досуг
+объяв
+курилка
+флейм
+флэйм
+основн
+развлеч
+оффтопик
+офтопик
+офф-топик
+прочее
+разное
+обо всём
+flood
+Flame
+stuff
+blah
+Off-topic
+Off topic
+Offtopic
+Oftopic
+General
+Common
+Business
+Обща
+Общий
+Общее
+Общие
+реклам
+Adver</Prior>
+  <OnlyPriors>False</OnlyPriors> 
+  </SecondarySection>
+  </XRumerProject>

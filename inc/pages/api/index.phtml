@@ -1,0 +1,638 @@
+<?php
+if(isset($_SESSION['templates_save']))
+  {
+  if($_SESSION['templates_save'] == 1)
+    {
+    ?>
+      <div class="result success"><?= CApi::GetTranslate('b_template_save_success') ?></div>
+    <?php
+    }
+  else
+    {
+    ?>
+      <div class="result error"><?= CApi::GetTranslate('b_template_save_error') ?></div>
+    <?php
+    }
+  }
+?>
+
+
+<div class="main">
+<div class="description">
+  <h1><?= CApi::GetTranslate('main_title') ?></h1>
+</div>
+
+<div class="form">
+<form action="?module=api" method="post" name="api_form">
+<div class="box">
+  <i>Token:</i>
+  <input type="text" value="<?= $this->m_token ?>" size="25" readonly="readonly" style="vertical-align: middle;">
+  <input type="submit" name="a[changetoken]" value="Change">
+</div>
+<div class="box">
+  <?= CApi::GetTranslate('b_settings_name') ?>:
+  <select name="settings" onchange="document.location='?module=api&a[changesettings]&n='+this.value"
+          style="width: 150px;">
+    <option value="default"><?= CHome::GetTranslate('b_settings_standart') ?></option>
+    <?php
+    $list_settings = $this->m_settings->GetListConfigsCheck();
+    if(!empty($list_settings) && is_array($list_settings))
+      {
+      foreach($list_settings as $id_set => $value_set)
+        {
+        ?>
+          <option
+           value="<?= $id_set ?>"<?= ($id_set == $this->m_current_setting) ? ' selected="selected"' : '' ?>><?= $value_set ?></option>
+        <?php
+        }
+      }
+    ?>
+  </select>
+</div>
+<div class="box">
+  <i><?= CApi::GetTranslate('b_action_name') ?>:</i>
+  <select name="actions" onchange="API.swapPageApi(this.value);">
+    <option
+     value="textgenerate"<?= $this->GetSettings()->Get('actions') == 'textgenerator' ? " selected='selected'" : NULL ?>><?= CApi::GetTranslate('b_action_textgenerator') ?></option>
+    <option
+     value="randline"<?= $this->GetSettings()->Get('actions') == 'randline' ? " selected='selected'" : NULL ?>><?= CApi::GetTranslate('b_action_randline') ?></option>
+    <option
+     value="textparser"<?= $this->GetSettings()->Get('actions') == 'textparser' ? " selected='textparser'" : NULL ?>><?= CApi::GetTranslate('b_action_parsing') ?></option>
+    <option
+     value="randkeywords"<?= $this->GetSettings()->Get('actions') == 'randkeywords' ? " selected='randkeywords'" : NULL ?>><?= CApi::GetTranslate('b_action_randkeywords') ?></option>
+
+  </select>
+</div>
+<div id="textgenerate"
+     style="display:<?= $this->GetSettings()->Get('actions') == 'textgenerate' || $this->GetSettings()->Get('actions') == '' ? 'block' : 'none' ?>">
+<div class="box">
+  <i><?= CApi::GetTranslate('b_pharagraph') ?>:</i>
+  <?= CApi::GetTranslate('b_from') ?>      <input type="text" name="fromPharagraph" id="fromPharagraph"
+                                                  value="<?= $this->GetSettings()->Get('fromPharagraph', 5) ?>"
+                                                  size="2">
+  <?= CApi::GetTranslate('b_to') ?>
+  <input type="text" name="toPharagraph" id="toPharagraph"
+         value="<?= $this->GetSettings()->Get('toPharagraph', 10) ?>" size="2">
+</div>
+<div class="box">
+  <i><?= CApi::GetTranslate('b_filetext') ?> (data/texts):</i>
+  <select name="textsFile" id="textsFile" style="width: 242px;">
+    <?= CModel_helper::ListFiles(CModel_text::PATH_TEXTS, $this->GetSettings()->Get('textsFile')) ?>
+  </select>
+
+</div>
+<div class="box">
+  <i><?= CApi::GetTranslate('b_filekeyword') ?>:</i>
+  <select name="keysFile" id="keysFile" style="width: 242px;">
+    <?= CModel_helper::ListFiles('data/keywords', $this->GetSettings()->Get('keysFile')) ?>
+  </select>
+
+  <div style="margin-top: 5px;"><i><?= CApi::GetTranslate('b_or_keyword') ?>:</i> <input type="text"
+                                                                                         name="keyword"
+                                                                                         value="<?= $this->GetSettings()->Get('keyword') ?>"
+                                                                                         style="width: 240px;">
+  </div>
+  <div style="margin-top: 5px;">
+    <i><?= CApi::GetTranslate('b_keywords_count') ?>:</i> <?= CApi::GetTranslate('b_from') ?>
+    <input type="text" name="fromKeywords" id="fromKeywords"
+           value="<?= $this->GetSettings()->Get('fromKeywords', 2) ?>" size="2">
+    <?= CApi::GetTranslate('b_to') ?>
+    <input type="text" name="toKeywords" id="toKeywords" value="<?= $this->GetSettings()->Get('toKeywords', 3) ?>"
+           size="2">
+  </div>
+  <div style="margin-top: 5px;">
+    <input type="checkbox" name="noparagraph"
+     <?= $this->GetSettings()->Get('noparagraph') == 'on' ? "checked='checked'" : NULL ?>
+           id="noparagraph" class="cb">
+    <label for="noparagraph"
+           title="<?= CApi::GetTranslate('b_add_noparagraph') ?>"><?= CApi::GetTranslate('b_add_noparagraph') ?></label>
+
+  </div>
+
+
+</div>
+
+<div class="box">
+  <input type="checkbox" name="needLinks"
+         onclick="swapOnePageAdv('blockLinks',this,'block');"  <?= $this->GetSettings()->Get('needLinks') == 'on' ? "checked='checked'" : NULL ?>
+         id="needLinks" class="cb">
+  <label for="needLinks"
+         title="<?= CApi::GetTranslate('b_file_links') ?>"><?= CApi::GetTranslate('b_add_links') ?></label>
+
+  <div id="blockLinks" class="box"
+       style="display:<?= $this->GetSettings()->Get('needLinks') == 'on' ? "block" : "none" ?>">
+    <i><?= CApi::GetTranslate('b_file_links') ?> (data/links):</i>
+    <select name="linksFile" id="linksFile" style="width: 242px;">
+      <?= CModel_helper::ListFiles('data/links', $this->GetSettings()->Get('linksFile')) ?>
+    </select>
+
+    <div style="margin-top: 5px;">
+      <i><?= CApi::GetTranslate('b_links_count') ?>:</i> <?= CApi::GetTranslate('b_from') ?>
+      <input type="text" name="fromLinks" id="fromLinks" value="<?= $this->GetSettings()->Get('fromLinks', 2) ?>"
+             size="2">
+      <?= CApi::GetTranslate('b_to') ?>
+      <input type="text" name="toLinks" id="toLinks" value="<?= $this->GetSettings()->Get('toLinks', 3) ?>"
+             size="2">
+    </div>
+
+  </div>
+
+</div>
+
+<div class="box">
+  <input type="checkbox" name="needAnchors"
+         onclick="swapOnePageAdv('blockAnchors',this,'block');"  <?= $this->GetSettings()->Get('needAnchors') == 'on' ? "checked='checked'" : NULL ?>
+         id="needAnchors" class="cb">
+  <label for="needAnchors"
+         title="<?= CApi::GetTranslate('b_add_anchors') ?>"><?= CApi::GetTranslate('b_add_anchors') ?></label>
+
+  <div id="blockAnchors" class="box"
+       style="display:<?= $this->GetSettings()->Get('needAnchors') == 'on' ? "block" : "none" ?>">
+
+    <i style="margin-top: 5px;"
+       title="<?= CApi::GetTranslate('b_file_anchors_title') ?>"><?= CApi::GetTranslate('b_file_anchors') ?>
+      (data/keywords):</i>
+    <select name="anchorsFile1" id="AnchorsFile1" style="width: 152px;">
+      <?= CModel_helper::ListFiles('data/keywords', $this->GetSettings()->Get('anchorsFile1')) ?>
+    </select>
+    <select name="anchorsFile2" id="AnchorsFile2" style="width: 152px;">
+      <option value=""></option>
+      <?= CModel_helper::ListFiles('data/keywords', $this->GetSettings()->Get('anchorsFile2')) ?>
+    </select>
+    <select name="anchorsFile3" id="AnchorsFile3" style="width: 152px;">
+      <option value=""></option>
+      <?= CModel_helper::ListFiles('data/keywords', $this->GetSettings()->Get('anchorsFile3')) ?>
+    </select>
+
+
+    <i title="<?= CApi::GetTranslate('b_file_urls_title') ?>"
+       style="margin-top: 5px;"><?= CApi::GetTranslate('b_file_urls') ?> (data/links):</i>
+    <select name="urlsFile1" id="urlsFile1" style="width: 152px;">
+
+      <?= CModel_helper::ListFiles('data/links', $this->GetSettings()->Get('urlsFile1')) ?>
+    </select>
+    <select name="urlsFile2" id="urlsFile2" style="width: 152px;">
+      <option value=""></option>
+      <?= CModel_helper::ListFiles('data/links', $this->GetSettings()->Get('urlsFile2')) ?>
+    </select>
+    <select name="urlsFile3" id="urlsFile3" style="width: 152px;">
+      <option value=""></option>
+      <?= CModel_helper::ListFiles('data/links', $this->GetSettings()->Get('urlsFile3')) ?>
+    </select>
+
+
+    <div style="margin-top: 5px;">
+      <i><?= CApi::GetTranslate('b_noachors_count') ?>:</i> <?= CApi::GetTranslate('b_from') ?>
+      <input type="text" name="fromNoAchors" id="fromNoAchors"
+             value="<?= $this->GetSettings()->Get('fromNoAchors', 25) ?>" size="2">%
+      <?= CApi::GetTranslate('b_to') ?>
+      <input type="text" name="toNoAchors" id="toNoAchors"
+             value="<?= $this->GetSettings()->Get('toNoAchors', 45) ?>"
+             size="2">%
+    </div>
+
+
+    <div style="margin-top: 5px;">
+      <i><?= CApi::GetTranslate('b_links_count') ?>:</i> <?= CApi::GetTranslate('b_from') ?>
+      <input type="text" name="fromLinksAnc" id="fromLinksAnc"
+             value="<?= $this->GetSettings()->Get('fromLinksAnc', 2) ?>"
+             size="2">
+      <?= CApi::GetTranslate('b_to') ?>
+      <input type="text" name="toLinksAnc" id="toLinksAnc" value="<?= $this->GetSettings()->Get('toLinksAnc', 3) ?>"
+             size="2">
+    </div>
+
+  </div>
+
+  <div class="box">
+    <input type="checkbox" name="needImages"
+           onclick="swapOnePageAdv('blockImages',this,'block');"  <?= $this->GetSettings()->Get('needImages') == 'on' ? "checked='checked'" : NULL ?>
+           id="needImages" class="cb">
+    <label for="needImages"
+           title="<?= CApi::GetTranslate('b_add_images') ?>"><?= CApi::GetTranslate('b_add_images') ?></label>
+
+    <div id="blockImages" class="box"
+         style="display:<?= $this->GetSettings()->Get('needImages') == 'on' ? "block" : "none" ?>">
+      <i style="margin-top: 5px;"
+         title="<?= CApi::GetTranslate('b_file_images_title') ?>"><?= CApi::GetTranslate('b_file_images') ?>
+        (data/links):</i>
+      <select name="imagesFile1" id="imagesFile1" style="width: 152px;">
+        <?= CModel_helper::ListFiles('data/links', $this->GetSettings()->Get('imagesFile1')) ?>
+      </select>
+      <i style="margin-top: 5px;"
+         title="<?= CApi::GetTranslate('b_file_images_links_title') ?>"><?= CApi::GetTranslate('b_file_images_links') ?>
+        (data/links):</i>
+      <select name="imagesUrl1" id="imagesUrl1" style="width: 152px;">
+        <option value="">NO</option>
+        <?= CModel_helper::ListFiles('data/links', $this->GetSettings()->Get('imagesUrl1')) ?>
+      </select>
+
+      <div style="margin-top: 5px;">
+        <i><?= CApi::GetTranslate('b_images_count') ?>:</i> <?= CApi::GetTranslate('b_from') ?>
+        <input type="text" name="fromImages" id="fromImages"
+               value="<?= $this->GetSettings()->Get('fromImages', 1) ?>" size="2">
+        <?= CApi::GetTranslate('b_to') ?>
+        <input type="text" name="toImages" id="toImages"
+               value="<?= $this->GetSettings()->Get('toImages', 2) ?>"
+               size="2">
+      </div>
+      <div style="margin-top: 5px;">
+        <i><?= CApi::GetTranslate('b_images_where') ?>:</i>
+        <input type="checkbox"
+               name="whereUp" <?= $this->GetSettings()->Get('whereUp') == 'on' ? "checked='checked'" : NULL ?>
+               id="whereUp" class="cb"> <label for="whereUp"><?= CApi::GetTranslate('b_where_up') ?></label><br>
+        <input type="checkbox"
+               name="whereCenter" <?= $this->GetSettings()->Get('whereCenter') == 'on' ? "checked='checked'" : NULL ?>
+               id="whereCenter" class="cb"> <label for="whereCenter"><?= CApi::GetTranslate('b_where_center') ?></label><br>
+        <input type="checkbox"
+               name="whereDown" <?= $this->GetSettings()->Get('whereDown') == 'on' ? "checked='checked'" : NULL ?>
+               id="whereDown" class="cb"> <label for="whereDown"><?= CApi::GetTranslate('b_where_down') ?></label><br>
+        <input type="checkbox"
+               name="whereRandom" <?= $this->GetSettings()->Get('whereRandom') == 'on' ? "checked='checked'" : NULL ?>
+               id="whereRandom" class="cb"> <label for="whereRandom"><?= CApi::GetTranslate('b_where_random') ?></label>
+      </div>
+      <div style="margin-top: 5px;">
+        <i><?= CApi::GetTranslate('b_images_position') ?>:</i>
+        <input type="checkbox"
+               name="positionLeft" <?= $this->GetSettings()->Get('positionLeft') == 'on' ? "checked='checked'" : NULL ?>
+               id="positionLeft" class="cb"> <label
+         for="positionLeft"><?= CApi::GetTranslate('b_position_left') ?></label><br>
+        <input type="checkbox"
+               name="positionCenter" <?= $this->GetSettings()->Get('positionCenter') == 'on' ? "checked='checked'" : NULL ?>
+               id="positionCenter" class="cb"> <label
+         for="positionCenter"><?= CApi::GetTranslate('b_position_center') ?></label><br>
+        <input type="checkbox"
+               name="positionRight" <?= $this->GetSettings()->Get('positionRight') == 'on' ? "checked='checked'" : NULL ?>
+               id="positionRight" class="cb"> <label
+         for="positionRight"><?= CApi::GetTranslate('b_position_right') ?></label><br>
+        <input type="checkbox"
+               name="positionRandom" <?= $this->GetSettings()->Get('positionRandom') == 'on' ? "checked='checked'" : NULL ?>
+               id="positionRandom" class="cb"> <label
+         for="positionRandom"><?= CApi::GetTranslate('b_position_random') ?></label>
+      </div>
+      <div style="margin-top: 10px;">
+        <input type="checkbox"
+               name="imageInText" <?= $this->GetSettings()->Get('imageInText') == 'on' ? "checked='checked'" : NULL ?>
+               id="imageInText" class="cb"> <label
+         for="imageInText"><?= CApi::GetTranslate('b_image_in_text') ?></label>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="box">
+    <input type="checkbox" name="needRandLine"
+           onclick="swapOnePageAdv('blockRandLines',this,'block');"  <?= $this->GetSettings()->Get('needRandLine') == 'on' ? "checked='checked'" : NULL ?>
+           id="needRandLine" class="cb">
+    <label for="needRandLine"
+           title="<?= CApi::GetTranslate('b_add_randline') ?>"><?= CApi::GetTranslate('b_add_randline') ?></label>
+
+    <div id="blockRandLines" class="box"
+         style="display:<?= $this->GetSettings()->Get('needRandLine') == 'on' ? "block" : "none" ?>">
+      <i style="margin-top: 5px;"
+         title="<?= CApi::GetTranslate('b_file_randlines_title') ?>"><?= CApi::GetTranslate('b_file_randlines') ?>
+        (data/randlines):</i>
+      <select name="randlinesFile1" id="randlinesFile1" style="width: 152px;">
+        <?= CModel_helper::ListFiles('data/randlines', $this->GetSettings()->Get('randlinesFile1')) ?>
+      </select>
+
+      <div style="margin-top: 5px;">
+        <i><?= CApi::GetTranslate('b_randlines_count') ?>:</i> <?= CApi::GetTranslate('b_from') ?>
+        <input type="text" name="fromRandLines" id="fromRandLines"
+               value="<?= $this->GetSettings()->Get('fromRandLines', 1) ?>" size="2">
+        <?= CApi::GetTranslate('b_to') ?>
+        <input type="text" name="toRandLines" id="toRandLines"
+               value="<?= $this->GetSettings()->Get('toRandLines', 3) ?>"
+               size="2">
+      </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+
+</div>
+
+
+<div id="randline" style="display:<?= $this->GetSettings()->Get('actions') == 'randline' ? 'block' : 'none' ?>">
+  <div class="box">
+    <i><?= CApi::GetTranslate('b_filetext') ?> (<?= CModel_text::PATH_RANDLINES ?>):</i>
+    <select name="textsFile" id="textsFile" style="width: 242px;">
+      <?= CModel_helper::ListFiles(CModel_text::PATH_RANDLINES, $this->GetSettings()->Get('textsFile')) ?>
+    </select>
+
+  </div>
+  <div class="box">
+    <i><?= CApi::GetTranslate('b_pharagraph') ?>:</i>
+    <?= CApi::GetTranslate('b_from') ?>      <input type="text" name="fromRandPharagraph" id="fromRandPharagraph"
+                                                    value="<?= $this->GetSettings()->Get('fromRandPharagraph', 5) ?>"
+                                                    size="2">
+    <?= CApi::GetTranslate('b_to') ?>
+    <input type="text" name="toRandPharagraph" id="toRandPharagraph"
+           value="<?= $this->GetSettings()->Get('toRandPharagraph', 10) ?>" size="2">
+  </div>
+
+</div>
+
+
+<div id="randkeywords" style="display:<?= $this->GetSettings()->Get('actions') == 'randkeywords' ? 'block' : 'none' ?>">
+  <div class="box">
+    <i><?= CApi::GetTranslate('b_filekeyword') ?> (data/texts):</i>
+    <select name="keywordsFile" id="keywordsFile" style="width: 242px;">
+      <?= CModel_helper::ListFiles(CModel_keywords::PATH_KEYWORDS, $this->GetSettings()->Get('keywordsFile')) ?>
+    </select>
+
+  </div>
+
+  <div class="box">
+    <i><?= CApi::GetTranslate('b_delimiter_keywords') ?></i>
+    <input type="text" name="delimiterKeys" id="delimiterKeys"
+           value="<?= $this->GetSettings()->Get('delimiterKeys', ', ') ?>"
+           size="17">
+  </div>
+
+  <div class="box">
+    <i><?= CApi::GetTranslate('b_count_keywords') ?>:</i>
+    <?= CApi::GetTranslate('b_from') ?>      <input type="text" name="fromRandKeys" id="fromRandKeys"
+                                                    value="<?= $this->GetSettings()->Get('fromRandKeys', 15) ?>"
+                                                    size="2">
+    <?= CApi::GetTranslate('b_to') ?>
+    <input type="text" name="toRandKeys" id="toRandKeys"
+           value="<?= $this->GetSettings()->Get('toRandKeys', 25) ?>" size="2">
+  </div>
+
+  <div class="box">
+    <input type="checkbox" name="needLinksKey"
+           onclick="swapOnePageAdv('blockLinksKey',this,'block');if($('needLinksKey').checked) {$('needAnchorsRand').checked=false; $('blockAnchorsRand').style.display='none';}"  <?= $this->GetSettings()->Get('needLinksKey') == 'on' ? "checked='checked'" : NULL ?>
+           id="needLinksKey" class="cb">
+    <label for="needLinksKey"
+           title="<?= CApi::GetTranslate('b_file_links') ?>"><?= CApi::GetTranslate('b_add_links') ?></label>
+
+    <div id="blockLinksKey" class="box"
+         style="display:<?= $this->GetSettings()->Get('needLinksKey') == 'on' ? "block" : "none" ?>">
+      <i><?= CApi::GetTranslate('b_file_links') ?> (data/links):</i>
+      <select name="linksFileKey" id="linksFileKey" style="width: 242px;">
+        <?= CModel_helper::ListFiles('data/links', $this->GetSettings()->Get('linksFileKey')) ?>
+      </select>
+
+      <div style="margin-top: 5px;">
+        <i><?= CApi::GetTranslate('b_links_count') ?>:</i> <?= CApi::GetTranslate('b_from') ?>
+        <input type="text" name="fromLinksKey" id="fromLinksKey"
+               value="<?= $this->GetSettings()->Get('fromLinksKey', 2) ?>"
+               size="2">
+        <?= CApi::GetTranslate('b_to') ?>
+        <input type="text" name="toLinksKey" id="toLinks" value="<?= $this->GetSettings()->Get('toLinksKey', 3) ?>"
+               size="2">
+      </div>
+
+      <div style="margin-top: 5px;">
+        <input type="checkbox" name="next_links"
+         <?= $this->GetSettings()->Get('next_links') == 'on' ? "checked='checked'" : NULL ?>
+               id="next_links" class="cb">
+        <label for="next_links"
+               title="<?= CApi::GetTranslate('b_next_links') ?>"><?= CApi::GetTranslate('b_next_links') ?></label>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="box">
+    <input type="checkbox" name="needAnchorsRand"
+           onclick="swapOnePageAdv('blockAnchorsRand',this,'block'); if($('needAnchorsRand').checked) {$('needLinksKey').checked=false; $('blockLinksKey').style.display='none';}"  <?= $this->GetSettings()->Get('needAnchorsRand') == 'on' ? "checked='checked'" : NULL ?>
+           id="needAnchorsRand" class="cb">
+    <label for="needAnchorsRand"
+           title="<?= CApi::GetTranslate('b_add_anchors') ?>"><?= CApi::GetTranslate('b_add_anchors') ?></label>
+
+    <div id="blockAnchorsRand" class="box"
+         style="display:<?= $this->GetSettings()->Get('needAnchorsRand') == 'on' ? "block" : "none" ?>">
+
+      <i style="margin-top: 5px;"
+         title="<?= CApi::GetTranslate('b_file_anchors_title') ?>"><?= CApi::GetTranslate('b_file_anchors') ?>
+        (data/keywords):</i>
+      <select name="anchorsFileRand1" id="AnchorsFileRand1" style="width: 152px;">
+        <?= CModel_helper::ListFiles('data/keywords', $this->GetSettings()->Get('anchorsFileRand1')) ?>
+      </select>
+      <select name="anchorsFileRand2" id="AnchorsFileRandRand2" style="width: 152px;">
+        <option value=""></option>
+        <?= CModel_helper::ListFiles('data/keywords', $this->GetSettings()->Get('anchorsFileRand2')) ?>
+      </select>
+      <select name="anchorsFileRand3" id="AnchorsFileRand3" style="width: 152px;">
+        <option value=""></option>
+        <?= CModel_helper::ListFiles('data/keywords', $this->GetSettings()->Get('anchorsFileRand3')) ?>
+      </select>
+
+
+      <i title="<?= CApi::GetTranslate('b_file_urls_title') ?>"
+         style="margin-top: 5px;"><?= CApi::GetTranslate('b_file_urls') ?> (data/links):</i>
+      <select name="urlsFileRand1" id="urlsFileRand1" style="width: 152px;">
+
+        <?= CModel_helper::ListFiles('data/links', $this->GetSettings()->Get('urlsFileRand1')) ?>
+      </select>
+      <select name="urlsFileRand2" id="urlsFileRand2" style="width: 152px;">
+        <option value=""></option>
+        <?= CModel_helper::ListFiles('data/links', $this->GetSettings()->Get('urlsFileRand2')) ?>
+      </select>
+      <select name="urlsFileRand3" id="urlsFileRand3" style="width: 152px;">
+        <option value=""></option>
+        <?= CModel_helper::ListFiles('data/links', $this->GetSettings()->Get('urlsFileRand3')) ?>
+      </select>
+
+
+      <div style="margin-top: 5px;">
+        <i><?= CApi::GetTranslate('b_noachors_count') ?>:</i> <?= CApi::GetTranslate('b_from') ?>
+        <input type="text" name="fromNoAchorsRand" id="fromNoAchorsRand"
+               value="<?= $this->GetSettings()->Get('fromNoAchorsRand', 25) ?>" size="2">%
+        <?= CApi::GetTranslate('b_to') ?>
+        <input type="text" name="toNoAchorsRand" id="toNoAchorsRand"
+               value="<?= $this->GetSettings()->Get('toNoAchorsRand', 45) ?>"
+               size="2">%
+      </div>
+
+
+      <div style="margin-top: 5px;">
+        <i><?= CApi::GetTranslate('b_links_count') ?>:</i> <?= CApi::GetTranslate('b_from') ?>
+        <input type="text" name="fromLinksAncRand" id="fromLinksAncRand"
+               value="<?= $this->GetSettings()->Get('fromLinksAncRand', 2) ?>"
+               size="2">
+        <?= CApi::GetTranslate('b_to') ?>
+        <input type="text" name="toLinksAncRand" id="toLinksAncRand" value="<?= $this->GetSettings()->Get('toLinksAncRand', 3) ?>"
+               size="2">
+      </div>
+
+    </div>
+  <div class="box">
+    <input type="checkbox" name="needFirstBigAlpha"
+           onclick="swapOnePageAdv('blockSenteces',this,'block');" <?= $this->GetSettings()->Get('needFirstBigAlpha') == 'on' ? "checked='checked'" : NULL ?>
+           id="needFirstBigAlpha" class="cb">
+    <label for="needFirstBigAlpha"
+           title="<?= CApi::GetTranslate('b_first_alpha_big_title') ?>"><?= CApi::GetTranslate('b_first_alpha_big') ?></label>
+
+    <div id="blockSenteces" class="box"
+         style="display:<?= $this->GetSettings()->Get('needFirstBigAlpha') == 'on' ? "block" : "none" ?>">
+      <div style="margin-top: 5px;">
+        <i><?= CApi::GetTranslate('b_senteces_count') ?>:</i> <?= CApi::GetTranslate('b_from') ?>
+        <input type="text" name="fromSentencesCount" id="fromSentencesCount"
+               value="<?= $this->GetSettings()->Get('fromSentencesCount', 2) ?>"
+               size="2">
+        <?= CApi::GetTranslate('b_to') ?>
+        <input type="text" name="toSentencesCount" id="toSentencesCount"
+               value="<?= $this->GetSettings()->Get('toSentencesCount', 3) ?>"
+               size="2">
+      </div>
+
+      <div style="margin-top: 5px;">
+        <i><?= CApi::GetTranslate('b_paragraph_count') ?>:</i> <?= CApi::GetTranslate('b_from') ?>
+        <input type="text" name="fromParagraphCount" id="fromParagraphCount"
+               value="<?= $this->GetSettings()->Get('fromParagraphCount', 1) ?>"
+               size="2">
+        <?= CApi::GetTranslate('b_to') ?>
+        <input type="text" name="toParagraphCount" id="toParagraphCount"
+               value="<?= $this->GetSettings()->Get('toParagraphCount', 1) ?>"
+               size="2">
+      </div>
+
+      <div style="margin-top: 5px;">
+        <input type="checkbox" name="paragraphTag"
+         <?= $this->GetSettings()->Get('paragraphTag') == 'on' ? "checked='checked'" : NULL ?>
+               id="paragraphTag" class="cb">
+        <label for="paragraphTag"
+               title="<?= CApi::GetTranslate('b_paragraph_tag') ?>"><?= CApi::GetTranslate('b_paragraph_tag') ?></label>
+      </div>
+
+
+    </div>
+  </div>
+
+
+</div>
+<div id="textparser" style="display:<?= $this->GetSettings()->Get('actions') == 'textparser' ? 'block' : 'none' ?>">
+  <div class="box">
+    <?= CApi::GetTranslate('b_url') ?>
+    <input type="text" name="urlParser" id="urlParser" value="<?= $this->GetSettings()->Get('urlParser', '') ?>">
+  </div>
+</div>
+<div class="box">
+  <input type="button" onclick="API.SendForm();return false;" value="<?= CApi::GetTranslate('b_get_url') ?>"
+         style="width: 150px; height: 30px; margin-top: 10px;">
+</div>
+<div><?= CApi::GetTranslate('b_result_url') ?></div>
+<div id="api_result_url"></div>
+
+</form>
+
+
+</div>
+
+<div class="clear"></div>
+
+</div>
+
+
+<div class="content">
+
+  <h2><?= CApi::GetTranslate('b_text') ?></h2>
+
+  <ul>
+    <li><?= CApi::GetTranslate('b_text_parsing_url') ?>:<br>
+      <a
+       href="api.php?token=<?= $this->m_token ?>&amp;action=textparser&amp;url=http://en.wikipedia.org/wiki/Doorway_page"
+       target="_blank">api.php?token=<b><?= $this->m_token ?></b>&amp;action=<b>textparser</b>&amp;url=<b>http://en.wikipedia.org/wiki/Doorway_page</b></a>
+      <br>
+      (api.php?token=[token]
+      &action=textparser
+      &url=[url_website])<br><br>
+    </li>
+    <li>
+      <?= CApi::GetTranslate('b_text_generate_key') ?>:<br>
+      <a
+       href="api.php?token=<?= $this->m_token ?>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=test&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>"
+       target="_blank">api.php?token=<b><?= $this->m_token ?></b>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=test&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>
+      </a>
+      <br>
+      (api.php?token=[token]
+      &action=textgenerate
+      &filename=[text_file_name]
+      &keyword=[encoded_keyword]
+      &from=5
+      &to=10
+      &settings=[settings_file_name])
+      <br><br>
+    </li>
+
+    <li><?= CApi::GetTranslate('b_text_generate_n_keys') ?>:<br>
+      <a
+       href="api.php?token=<?= $this->m_token ?>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=[3]&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>"
+       target="_blank">api.php?token=<b><?= $this->m_token ?></b>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=[3]&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>
+      </a>
+      <br><br>
+    </li>
+    <li><?= CApi::GetTranslate('b_text_generate_n_n_keys') ?>:<br>
+      <a
+       href="api.php?token=<?= $this->m_token ?>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=[3-5]&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>"
+       target="_blank">api.php?token=<b><?= $this->m_token ?></b>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=[3-5]&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>
+      </a>
+      <br><br>
+    </li>
+    <li><?= CApi::GetTranslate('b_text_generate_n_keys_file') ?>:<br>
+      <a
+       href="api.php?token=<?= $this->m_token ?>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=[3-5-health-keywords.txt]&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>"
+       target="_blank">api.php?token=<b><?= $this->m_token ?></b>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=[3-5-health-keywords.txt]&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>
+      </a>
+      <br><br>
+    </li>
+    <li><?= CApi::GetTranslate('b_text_generate_n_keys_from_file') ?><br>
+      <a
+       href="api.php?token=<?= $this->m_token ?>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=[3-5-health-keywords.txt][1-2-health-keywords.txt][4-5-health-keywords.txt]&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>"
+       target="_blank">api.php?token=<b><?= $this->m_token ?></b>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=[3-5-health-keywords.txt]&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>
+      </a>
+
+      <br><br>
+    </li>
+    <li><?= CApi::GetTranslate('b_text_generate_links') ?><br>
+      <a
+       href="api.php?token=<?= $this->m_token ?>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=[3-5-health-keywords.txt]&amp;links=[1-3-links.txt]&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>"
+       target="_blank">api.php?token=<b><?= $this->m_token ?></b>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=[3-5-health-keywords.txt]&amp;from=5&amp;to=10&amp;links=[1-3-links.txt]&amp;settings=<?= urlencode($this->m_current_setting) ?>
+      </a>
+
+      <br><br>
+    </li>
+    <li>
+      <?= CApi::GetTranslate('b_text_generate_links') ?><br><a
+       href="api.php?token=<?= $this->m_token ?>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=[3-5-health-keywords.txt]&amp;links=[1-3]&amp;urls=[urls1.txt|urls2.txt]&amp;anchors=[keys1.txt|keys2.txt]&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>"
+       target="_blank">api.php?token=<b><?= $this->m_token ?></b>&amp;action=textgenerate&amp;filename=health.txt&amp;keyword=[3-5-health-keywords.txt]&amp;from=5&amp;to=10&amp;links=[1-3]&amp;urls=[urls1.txt|urls2.txt]&amp;anchors=[keys1.txt|keys2.txt]&amp;settings=<?= urlencode($this->m_current_setting) ?>
+      </a>
+
+      <br><br>
+    </li>
+    <li><?= CApi::GetTranslate('b_text_generate_links_params') ?><br>
+      <a
+       href="api.php?token=<?= $this->m_token ?>&amp;action=textgenerate&amp;filename=health.txt&amp;links=[3-7]&amp;urls=[file1.txt|file2.txt]&amp;anchors=[anchor1.txt|anchor2.txt]&amp;noanchor=[30-50]&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>"
+       target="_blank">api.php?token=<b><?= $this->m_token ?></b>&amp;action=textgenerate&amp;filename=health.txt&amp;links=[3-7]&amp;urls=[file1.txt|file2.txt]&amp;anchors=[anchor1.txt|anchor2.txt]&amp;noanchor=[30-50]&amp;from=5&amp;to=10&amp;settings=<?= urlencode($this->m_current_setting) ?>
+      </a>
+      <br><br>
+    </li>
+    <li><?= CApi::GetTranslate('b_text_generate_links_params_nokeyword') ?><br>
+      <a
+       href="api.php?token=<?= $this->m_token ?>&amp;action=textgenerate&amp;filename=health.txt&amp;links=[3-7]&amp;urls=[file1.txt|file2.txt]&amp;anchors=[anchor1.txt|anchor2.txt]&amp;noanchor=[30-50]&amp;from=5&amp;to=10&amp;nokeyword=1&amp;settings=<?= urlencode($this->m_current_setting) ?>"
+       target="_blank">api.php?token=<b><?= $this->m_token ?></b>&amp;action=textgenerate&amp;filename=health.txt&amp;links=[3-7]&amp;urls=[file1.txt|file2.txt]&amp;anchors=[anchor1.txt|anchor2.txt]&amp;noanchor=[30-50]&amp;from=5&amp;to=10&amp;nokeyword=1&amp;settings=<?= urlencode($this->m_current_setting) ?>
+      </a>
+      <br><br>
+    </li>
+    <li><?= CApi::GetTranslate('b_text_generate_randline') ?><br>
+      <a
+       href="api.php?token=<?= $this->m_token ?>&amp;action=randline&amp;filename=randline.txt"
+       target="_blank">api.php?token=<b><?= $this->m_token ?></b>&amp;action=randline&amp;filename=randline.txt</a>
+      <br><br>
+    </li>
+    <li><?= CApi::GetTranslate('b_text_generate_randline_paragraph') ?><br>
+      <a
+       href="api.php?token=<?= $this->m_token ?>&amp;action=randline&amp;filename=randline.txt&amp;paragraph=[3-7]"
+       target="_blank">api.php?token=<b><?= $this->m_token ?></b>&amp;action=randline&amp;filename=randline.txt&amp;paragraph=[3-7]</a>
+      <br><br>
+    </li>
+  </ul>
+
+</div>

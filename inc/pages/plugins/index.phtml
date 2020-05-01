@@ -1,0 +1,71 @@
+<div class="head">
+    <h1 class="title"><?=CPlugins::GetTranslate('main_title')?></h1>
+</div>
+
+
+<?php
+if(isset($_SESSION['templates_save']))
+   {
+   ?>
+   <div style="padding:10px; margin: 10px -10px 0 -10px; clear: both;">
+      <?php
+      if($_SESSION['templates_save'] == 1)
+         {
+         ?>
+             <div class="result success"><?=CTemplates::GetTranslate('b_save_success')?></div>
+            <?php
+         }
+      else
+         {
+         ?>
+             <div class="result error"><?=CTemplates::GetTranslate('b_save_error')?></div>
+            <?php
+         }
+      ?>
+   </div>
+   <?php
+   }
+?>
+<?php
+$list=$this->GetListPlugins();
+if(empty($list))
+   {
+   ?>
+   <span style="color: gray;"><?=CTasks::GetTranslate('b_plugins_list_empty')?></span>
+   <?
+   }
+//---
+?>
+<table class="table" cellspacing="0" cellpadding="5" border="0">
+    <tr>
+        <th style="width:80px;"><?=CPlugins::GetTranslate('number')?></th>
+        <th><?=CPlugins::GetTranslate('name')?></th>
+        <th><?=CPlugins::GetTranslate('author')?></th>
+        <th><?=CPlugins::GetTranslate('description')?></th>
+        <th><?=CPlugins::GetTranslate('action')?></th>
+    </tr>
+   <?php
+   $model=$this->GetModel();
+   $info_last=array();
+   $i=1;
+   foreach($list as $fname)
+      {
+      $plugin_class_name='CPlugin_' . $fname;
+      if(!class_exists($plugin_class_name)) continue;
+      //---
+      $plugin_class=new $plugin_class_name();
+      $type=isset($GLOBAL_ACTIVE_PLUGINS[$fname]) ? 'deactivate' : 'activate';
+      ?>
+          <tr>
+              <td><?=$i++?></td>
+              <td><?=$plugin_class->GetName()?> (<?=$plugin_class->GetVersion()?>)</td>
+              <td><?=$plugin_class->GetAuthor()?></td>
+              <td><?=$plugin_class->GetDescription()?></td>
+              <td><a href="?module=plugins&a[<?=$type?>]&name=<?=urlencode($fname)?>"
+                     class="<?=$type?>"><?=$this->GetTranslate($type)?></td>
+          </tr>
+         <?php }?>
+</table>
+      
+      <div>
+      

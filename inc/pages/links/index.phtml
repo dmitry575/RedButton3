@@ -1,0 +1,156 @@
+<?php
+if(isset($_SESSION['links_delete']))
+   {
+      if($_SESSION['links_delete'] == 1)
+         {
+         ?>
+             <div class="result success"><?=CTemplates::GetTranslate('b_save_success')?></div>
+            <?php
+         }
+      else
+         {
+         ?>
+             <div class="result error"><?=CTemplates::GetTranslate('b_save_error')?></div>
+            <?php
+         }
+   }
+?>
+
+<div class="main">
+    <div class="description">
+        <h1><?=CLinks::GetTranslate('main_title')?></h1>
+    </div>
+    
+    <div class="form">
+        <form method="post" action="?module=links">
+        <div class="box">
+            <i><?= CLinks::GetTranslate('category') ?>:</i>
+            <select name="download_category" style="width:200px">
+              <option value="-1"><?=CLinks::GetTranslate('all')?></option>
+              <?=CModel_helper::ListDirs($this->m_path, $this->m_current_category) ?>
+            </select>
+        </div>
+        
+        <div class="box">
+            <i><?=CLinks::GetTranslate('format')?>:</i>
+            <select name="download_type" style="width:200px">
+              <option value="text"<?=$this->m_current_type == 'text' ? " selected='selected'" : null?>><?=CLinks::GetTranslate('download_all_links_text')?></option>
+              <option value="html"<?=$this->m_current_type == 'html' ? " selected='selected'" : null?>><?=CLinks::GetTranslate('download_all_links_html')?></option>
+              <option value="bbcode"<?=$this->m_current_type == 'bbcode' ? " selected='selected'" : null?>><?=CLinks::GetTranslate('download_all_links_bbcode')?></option>
+            </select>
+        </div>
+            
+        <div class="box">
+            <i><?=CLinks::GetTranslate('filter')?>:</i>
+            <select name="download_filter" style="width:200px">
+              <option value="<?=CModel_links::FILTER_ALL?>"<?=$this->m_filter == CModel_links::FILTER_ALL ? " selected='selected'" : null?>><?=CLinks::GetTranslate('all')?></option>
+              <option value="<?=CModel_links::FILTER_INDEX?>"<?=$this->m_filter == CModel_links::FILTER_INDEX ? " selected='selected'" : null?>><?=CLinks::GetTranslate('mains')?></option>
+            </select>  
+            <div style="margin-top: 5px;">
+            <?=CLinks::GetTranslate('links_format')?>: <input type="checkbox" name="download_self_format" id="download_self_format"<?=$this->m_check_format?" checked='checked'":''?> onclick="swapOnePageAdv('divFormat', this,'inline');">
+            <span id="divFormat" style="display:<?=$this->m_check_format?"block":'none'?>"><input type="text" name="download_format" value="<?=$this->m_format?>" style="width: 300px;"></span>
+            </div>
+        </div>
+
+
+
+        <input type="submit" value="<?=CLinks::GetTranslate('download_button')?>" class="simpleButton" name="a[downloadalllinks]">
+        <a href="?module=links&amp;a[clearalllinks]" class="delete" style="color: #DF3E29; margin-left: 5px;" onclick="return confirm('<?=CLinks::GetTranslate('clear_all_links')?>')"><?=CLinks::GetTranslate('download_all_links_clear')?></a>
+        </form>
+    </div>
+    <div class="clear"></div>
+</div>
+
+
+
+<div class="content">
+
+<!-- Список категорий -->
+<?= CLinks::GetTranslate('category') ?>:
+<select name='category' onchange="window.location='?module=links&cat='+this.value;"
+        style='width: 148px; vertical-align: middle; margin-right: 5px;'>
+   <?=CModel_helper::ListDirs($this->m_path, $this->m_current_category) ?>
+</select>
+<a href="?module=links&cat=<?=urlencode($this->m_current_category)?>&a[deleteall]"
+   onclick="return confirm('<?=CLinks::GetTranslate('delete_sure_all')?>')"><?=CLinks::GetTranslate('delete')?></a>
+<span>&nbsp; | &nbsp; <?=CLinks::GetTranslate('add')?></span>
+
+<table style="width: 100%; margin-top: 15px;" cellpadding="0" cellspacing="0">
+    <tr>
+        <!-- Список доменов для указанной категории -->
+        <td valign="top" style="width: 300px;">
+           <?php
+           if(empty($this->m_list_domains))
+              {
+              ?>&nbsp;<?
+              }
+           else
+              {
+              ?>
+                  <div>
+                      <a href="?module=links&amp;cat=<?=urlencode($this->m_current_category)?>&amp;a[downloaddomains]&amp;type=<?=$this->m_current_type?>"><?=CLinks::GetTranslate('download_domains')?></a>
+                  </div>
+                  <ul class="listDomains"><?php
+                     foreach($this->m_list_domains as $key=>&$value)
+                        {
+                        ?>
+                            <li<?=$value[2] == $this->m_current_domain ? " class='selected'" : null?>>
+                                <a href='?module=links&amp;cat=<?=urlencode($this->m_current_category)?>&amp;domain=<?=urlencode($value[LinskFormat::DOMAIN])?>&amp;position=<?=$value[LinskFormat::POSITION]?>&amp;cnt=<?=$value[LinskFormat::COUNT]?>&amp;type=<?=$this->m_current_type?>'><?=$value[LinskFormat::DOMAIN]?></a>
+                                <i><?=$value[LinskFormat::COUNT]?></i>
+                                <span><?=date("F j, H:i", $value[0])?></span>
+                            </li><?
+                        }?>
+                  </ul><?
+              } ?>
+
+        </td>
+
+        <!-- Список ссылок -->
+        <td valign="top" style="padding: 5px; ">
+           <?php
+           if(empty($this->m_list_links))
+              {
+              ?>
+                  <div style="margin: 50px 0 50px -300px; text-align: center; color: gray;">Нет данных</div><?
+              }
+           else
+              {
+              ?>
+                  <div class="formatLinks">
+                     <?=CLinks::GetTranslate('format')?>:
+                      <a <?=$this->m_current_type == 'text' ? "class='selected'" : null?>
+                              href="?module=links&amp;cat=<?=urlencode($this->m_current_category)?>&amp;domain=<?=urlencode($this->m_current_domain)?>&amp;position=<?=$this->m_position?>&amp;cnt=<?=$this->m_links_cnt?>&amp;type=text&amp;filter=<?=$this->m_filter?>">Text</a>
+                      |
+                      <a <?=$this->m_current_type == 'html' ? "class='selected'" : null?>
+                              href="?module=links&amp;cat=<?=urlencode($this->m_current_category)?>&amp;domain=<?=urlencode($this->m_current_domain)?>&amp;position=<?=$this->m_position?>&amp;cnt=<?=$this->m_links_cnt?>&amp;type=html&amp;filter=<?=$this->m_filter?>">HTML</a>
+                      |
+                      <a <?=$this->m_current_type == 'bbcode' ? "class='selected'" : null?>
+                              href="?module=links&amp;cat=<?=urlencode($this->m_current_category)?>&amp;domain=<?=urlencode($this->m_current_domain)?>&amp;position=<?=$this->m_position?>&amp;cnt=<?=$this->m_links_cnt?>&amp;type=bbcode&amp;filter=<?=$this->m_filter?>">bbCode</a>
+                      <span style="margin-left:10px"><?=CLinks::GetTranslate('filter')?>:</span>
+                      <a <?=$this->m_filter == CModel_links::FILTER_ALL ? "class='selected'" : null?>
+                              href="?module=links&amp;cat=<?=urlencode($this->m_current_category)?>&amp;domain=<?=urlencode($this->m_current_domain)?>&amp;position=<?=$this->m_position?>&amp;cnt=<?=$this->m_links_cnt?>&amp;type=<?=$this->m_current_type?>&amp;filter=<?=CModel_links::FILTER_ALL?>">ALL</a>
+                      |
+                      <a <?=$this->m_filter == CModel_links::FILTER_INDEX ? "class='selected'" : null?>
+                              href="?module=links&amp;cat=<?=urlencode($this->m_current_category)?>&amp;domain=<?=urlencode($this->m_current_domain)?>&amp;position=<?=$this->m_position?>&amp;cnt=<?=$this->m_links_cnt?>&amp;type=<?=$this->m_current_type?>&amp;filter=<?=CModel_links::FILTER_INDEX?>">MAIN</a>
+
+                      <a href="?module=links&amp;cat=<?=urlencode($this->m_current_category)?>&amp;domain=<?=urlencode($this->m_current_domain)?>&amp;type=bbcode&amp;a[delete]=1"
+                         class="delete"
+                         onclick="return confirm('<?=sprintf(CLinks::GetTranslate('delete_sure_domain'), $this->m_current_domain)?>')"><?=CLinks::GetTranslate('delete')?></a>
+                      
+                  </div>
+
+                  <textarea cols="100" rows="50" wrap="off"
+                            style="width: 100%; height: 100%; min-height: 200px; padding: 5px; border: 1px solid #DADADA; margin-top: 8px;"
+                            readonly="readonly"><?php
+                     foreach($this->m_list_links as $key=>&$value)
+                        {
+                        ?><?=
+                        htmlspecialchars(trim($value))."\r\n"?><?
+                        }?></textarea><?
+              } ?>
+        </td>
+    </tr>
+</table>
+</div>
+ 
+      

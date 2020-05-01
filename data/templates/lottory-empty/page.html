@@ -1,0 +1,352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html class="cufon-active cufon-ready" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>[TITLE]</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="keywords" content="[KEYWORDS]">
+    <meta name="description" content="[DESCRIPTION]">
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="[HOME-URL]style.css" type="text/css" rel="stylesheet">
+    <script language="javascript">
+        function validate() {
+            var msg = "";
+            var bool = true;
+            if (document.getElementById('selected1').innerHTML == "" || document.getElementById('selected2').innerHTML == "" || document.getElementById('selected3').innerHTML == "" || document.getElementById('selected4').innerHTML == "" || document.getElementById('selected5').innerHTML == "") {
+                bool = false;
+                msg += "Выибрайте 5 ноеров.\n";
+            }
+            if (bool == false) {
+                alert(msg);
+            }
+            return bool;
+        }
+
+        function select_number(no_id) {
+
+            var number_array = new Array();
+            var count = 0;
+            var bool = true;
+            for (var i = 1; i <= 5; i++) {
+                var str = "selected" + i;
+                if (document.getElementById(str).innerHTML == document.getElementById(no_id).innerHTML) {
+
+                    document.getElementById(str).innerHTML = "";
+                    bool = false;
+                } else if (document.getElementById(str).innerHTML > 0) {
+                    number_array[count] = document.getElementById(str).innerHTML;
+                    count++;
+                }
+            }
+            if (bool == false) {
+                var numbers_str = "";
+                for (var j = 1; j <= 5; j++) {
+                    var str = "selected" + j;
+                    document.getElementById(str).innerHTML = "";
+                }
+                for (var cnt = 0; cnt < number_array.length; cnt++) {
+                    var number = parseInt(cnt) + 1;
+                    var str = "selected" + number;
+                    if (document.getElementById(str)) {
+                        document.getElementById(str).innerHTML = number_array[cnt];
+                        if (cnt > 0) {
+                            numbers_str += "," + number_array[cnt];
+                            ;
+                        } else {
+                            numbers_str += number_array[cnt];
+                            ;
+                        }
+                    }
+                }
+                document.getElementById('no_of_click').value = number_array.length;
+                document.getElementById('numbers').value = numbers_str;
+            }
+            if (bool == true) {
+                var no_of_click = parseInt(document.getElementById('no_of_click').value) + 1;
+                if (no_of_click > 5) {
+                    alert("Выбирети 5 номеров");
+                } else {
+                    for (var i = 1; i <= 5; i++) {
+                        var str = "selected" + i;
+
+                        if (document.getElementById(str).innerHTML == "") {
+                            document.getElementById(str).innerHTML = document.getElementById(no_id).innerHTML;
+                            break;
+                        }
+                    }
+                    document.getElementById(no_id).className = "numberActive";
+                    document.getElementById('no_of_click').value = no_of_click;
+                    if (document.getElementById('numbers').value != '') {
+                        document.getElementById('numbers').value += "," + document.getElementById(no_id).innerHTML;
+                    } else if (document.getElementById('numbers').value == '') {
+                        document.getElementById('numbers').value += document.getElementById(no_id).innerHTML;
+                    }
+                }
+            } else {
+                document.getElementById(no_id).className = "numberDeactive";
+            }
+        }
+    </script>
+
+    [RSS]
+</head>
+<body>
+<div class="page_wrap">
+    <div class="page">
+        <div class="header">
+            <a class="header_logo" href="/">Мы Выигрываем, а ты?</a>
+
+            <div class="header_menu">
+                <ul class="menu-nav">
+                </ul>
+            </div>
+        </div>
+        <div class="main_content">
+            <div class="main_content_inside">
+                <div class="mclayout_2columns">
+                    <div class="mclayout_2columns_center">
+                        <div class="mclayout_2columns_center_inside">
+                            <div class="content">
+                                <div class="h">
+                                </div>
+
+
+                                <span class="article_separator"> </span>
+
+                                [MENU-CATEGORY]
+                                <!-- rb:content -->
+                                <h1>[UCW-KEYWORD]</h1>
+                                <a href="[HOME-URL]/[go|euromillions|golottery|powerball|megamillions|superenalotto]"
+                                   title="[RAND-KEYWORD]"><img
+                                        src="[HOME-URL]/i/online-lottery[RAND-0-9].gif"
+                                        alt="Почти уже выиграли" border="0"></a>
+                                <br> <br>
+
+                                <form name="form1" method="post"
+                                      action="[HOME-URL]/[go|euromillions|golottery|powerball|megamillions|superenalotto]">
+                                    <input name="no_of_click" id="no_of_click" value="0" type="hidden">
+                                    <input name="numbers" id="numbers" value="" type="hidden">
+
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tbody>
+                                        <tr>
+                                            <td align="left" valign="top" width="14%">&nbsp;</td>
+                                            <td id="selected1" class="pickvalu-txt" align="left" valign="top"
+                                                width="14%"></td>
+                                            <td id="selected2" class="pickvalu-txt" align="left" valign="top"
+                                                width="15%"></td>
+                                            <td id="selected3" class="pickvalu-txt" align="left" valign="top"
+                                                width="14%"></td>
+                                            <td id="selected4" class="pickvalu-txt" align="left" valign="top"
+                                                width="14%"></td>
+                                            <td id="selected5" class="pickvalu-txt" align="left" valign="top"
+                                                width="29%"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <table width="100%">
+
+                                        <tbody>
+                                        <tr>
+                                            <td class="number-bg"><a href="javascript:select_number('n1');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n1">1</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n2');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n2">2</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n3');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n3">3</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n4');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n4">4</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n5');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n5">5</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n6');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n6">6</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n7');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n7">7</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n8');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n8">8</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n9');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n9">9</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n10');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n10">10</div>
+                                            </a></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="number-bg"><a href="javascript:select_number('n11');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n11">11</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n12');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n12">12</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n13');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n13">13</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n14');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n14">14</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n15');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n15">15</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n16');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n16">16</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n17');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n17">17</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n18');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n18">18</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n19');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n19">19</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n20');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n20">20</div>
+                                            </a></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="number-bg"><a href="javascript:select_number('n21');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n21">21</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n22');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n22">22</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n23');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n23">23</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n24');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n24">24</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n25');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n25">25</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n26');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n26">26</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n27');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n27">27</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n28');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n28">28</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n29');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n29">29</div>
+                                            </a></td>
+                                            <td class="number-bg"><a href="javascript:select_number('n30');"
+                                                                     onfocus="blur()">
+                                                <div class="numberDeactive" id="n30">30</div>
+                                            </a></td>
+                                        </tr>
+
+
+                                        </tbody>
+                                    </table>
+
+                                    <input type="submit" name="a[go]" value="Давай с играем?"
+                                           style="width: 300px; height: 30px;">
+
+                                    <form>
+
+                                        [TEXT-10-25]
+                                        <!-- /rb:content -->
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mclayout_2columns_left">
+                        <div class="navigation_left">
+                            <div class="h"><h3>Меню</h3></div>
+
+                            <div class="left_menu">
+                                <ul class="menu">
+                                    [MENU-CATEGORY]
+                                </ul>
+                            </div>
+                            <div class="h"><h3>Популярные ссылки</h3></div>
+                            <div class="left_menu">
+                                <ul>
+                                    [RAND-UC-LINK-10-15]
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="contacts_left">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="width: 227px; top: 217px;" class="psSuggestionWrap" id="mvmpsSuggestionWrap">
+    <div style="display: none;"><span class="psLabel"></span></div>
+    <div id="mvmpsSuggestion"></div>
+</div>
+<div class="footer">
+    <div class="footer_inside">
+        <div class="footer_carousel">
+            <div class="footer_carousel_inside">
+                <ul style="margin: 0pt; padding: 0pt;">
+                    <li>[UC-LINK-5]</li>
+                    <li>[UC-LINK-6]</li>
+                    <li>[UC-LINK-7]</li>
+                </ul>
+                <a class="btn_left" href="#"></a>
+                <a class="btn_right" href="#"></a>
+            </div>
+        </div>
+        <div class="copy_and_counters">
+            <div class="copy">Copyright © 2010-2012 <a
+                    href="[HOME-URL]/[go|euromillions|golottery|powerball|megamillions|superenalotto]">Системы
+                выигрыша в лотереи</a>. Все права защищены.<br>Любое использование материалов сайта только с указанием
+                прямой, активной ссылки на оригинал.
+            </div>
+            <div class="counters">
+                <a href="[HOME-URL]/[go|euromillions|golottery|powerball|megamillions|superenalotto]"
+                   title="[RAND-KEYWORD]"><img src="[HOME-URL]/i/online-lottery[RAND-0-9].gif"
+                                               alt="Почти уже выиграли" border="0"></a>
+
+            </div>
+        </div>
+
+        <!--/footer-->
+    </div>
+</div>
+</body>
+</html>

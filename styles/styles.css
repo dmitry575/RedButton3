@@ -1,0 +1,493 @@
+/* ОБЩИЕ СТИЛИ */
+body {
+    font-family: sans-serif, arial, tahoma, verdana;
+    font-size: 0.95em;
+    background-color: #F7F7F7;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #8F8D86;
+}
+
+a.dashed {
+    text-decoration: none;
+    border-bottom: 1px dashed;
+}
+
+a:hover {
+    color: #DF4B37;
+}
+
+h1 {
+    font-weight: normal;
+    font-size: 1.8em;
+    margin: 0 0 10px 0;
+}
+
+div.head {
+    position: relative;
+    padding: 10px 0 0 0;
+    background-color: #EFECE0;
+}
+
+div.head h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 2em;
+}
+
+div.clear {
+    clear: both;
+    margin: 0;
+    padding: 0;
+}
+
+a.example {
+    text-decoration: none;
+}
+.small
+{
+    font-size: 0.7em;
+}
+/* CHECKBOX */
+input.cb {
+    margin: -1px 2px 0 0;
+    vertical-align: middle;
+}
+
+/* RADIOBUTTON */
+input.rb {
+    margin: -1px 2px 0 0;
+    vertical-align: middle;
+}
+
+/**
+ * АНАЛОГ ВЫПАДАЮЩЕГО СПИСКА
+ */
+span.aswap {
+    color: #8F8D86;
+}
+
+span.aswap a {
+    text-decoration: none;
+    border-bottom: 1px dashed;
+    color: #8F8D86;
+}
+
+span.aswap a:hover {
+    color: #DF3E29;
+}
+
+span.aswap a.selected {
+    cursor: default;
+    border-width: 0px;
+    color: black;
+}
+
+/* ФОРМА ВХОДА */
+form.login {
+    /*width: 420px;*/
+    text-align: center;
+    margin: 20% auto;
+}
+
+form.login input.pass {
+    width: 200px;
+    height: 20px;
+    vertical-align: middle;
+}
+
+form.login input.submit {
+    width: 70px;
+    height: 28px;
+    vertical-align: middle;
+}
+
+/* БОКОВОЕ МЕНЮ */
+ul.menu {
+    margin: 10px auto;
+    padding: 0;
+    list-style: none;
+    width: 900px;
+}
+
+ul.menu li {
+    margin: 0 10px 0 0;
+    list-style: none;
+    display: inline;
+}
+
+ul.menu li.selected a {
+    color: black;
+    border-bottom: 1px solid;
+}
+
+ul.menu li a {
+    text-decoration: none;
+    color: #8F8B7D;
+}
+
+ul.menu li a:hover {
+    color: black;
+}
+
+ul.menu li.right {
+    float: right;
+    margin-left: 10px;
+}
+
+ul.menu li.right a {
+    padding: 0;
+}
+
+ul.menu li.delimiter {
+  border-bottom: 1px solid #DFDFDF;
+  height: 1px;
+  margin: 10px 0;
+  padding: 0;
+}
+
+
+/* ВЕРХНЕЕ ОПИСАНИЕ И ФОРМА */
+div.main {
+    width: 900px;
+    margin: 10px auto;
+    }
+div.main .description {
+    float: left;
+    width: 270px;
+    padding: 0 20px 0 0;
+    }
+div.main .form {
+    float: left;
+    width: 570px;
+    background-color: #EFECE0;
+    padding: 20px;
+    }
+
+/* ОБЩИЙ КОНТЕНТ */
+div.content {
+    border-top: 1px solid #EFEFEF;
+    background-color: #EFEFEF;
+    padding: 20px;
+    }
+div.content div.main {
+    margin-top: -10px;
+    }
+    
+/* СТИЛИ ФРЕЙМОВ И БЛОКОВ */
+div.frame {
+    padding: 10px 0;
+    margin: 0;
+    float: left;
+    width: 270px;
+    margin-right: 40px;
+}
+
+div.frame h2 {
+    font-weight: normal;
+    font-size: 16pt;
+    margin: 0 0 15px 0;
+}
+
+div.frame h3 {
+    font-weight: normal;
+    font-size: 14pt;
+    margin: 0 0 5px 0;
+}
+
+div.left {
+    width: 245px;
+    display: inline-block;
+    zoom: 1; /* обычный layout fix для ИЕ6 */
+    *display: inline; /* для ИЕ 6, 7 */
+    vertical-align: text-top;
+}
+
+div.box {
+    margin: 0 0px 20px 0;
+}
+
+div#startBottom {
+    position: relative;
+    height: 35px;
+}
+
+input.button {
+    position: absolute;
+    top: 0;
+    margin: 0;
+    font-size: 1.2em;
+    border: 0px solid;
+    background-color: #DF4B37;
+    outline: none;
+    color: white;
+    width: 100px;
+    height: 35px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    text-shadow: 0px -1px 0 #AF3B2B;
+    cursor: pointer;
+}
+
+input.button:hover {
+    background-color: #DF3E29;
+}
+
+input.simpleButton {
+    padding: 5px 10px;
+    overflow: visible;
+}
+
+div#startBottom a {
+    position: absolute;
+    top: 9px;
+    text-decoration: none;
+    line-height: 100%;
+    font-size: 1.2em;
+    color: #8F876B;
+    text-shadow: 0px 1px 0 #EFECE0;
+    overflow: hidden;
+}
+
+div#startBottom a.add {
+    left: 110px;
+}
+
+div#startBottom a.add b {
+    font-size: 1.7em;
+    margin-top: 1px;
+}
+
+div#startBottom a.add span {
+    display: none;
+    font-style: italic;
+}
+
+div#startBottom a.add:hover b {
+    display: none;
+}
+
+div#startBottom a.add:hover span {
+    display: inline;
+}
+
+div.box i {
+    display: block;
+    margin: 0 0 3px 0;
+    font-style: normal;
+    white-space: nowrap;
+}
+
+h3 i {
+    display: block;
+    margin: 0 0 3px 0;
+    font-style: normal;
+    white-space: nowrap;
+}
+
+div.box div.name {
+    display: block;
+    margin: 0 0 3px 0;
+    white-space: nowrap;
+    position: relative;
+    /*height: 20px;*/
+    /*width: 100%;*/
+}
+
+/* Блок с сообщением */
+div.result {
+    margin: 0;
+    padding: 10px;
+}
+
+div.result.error {
+    background-color: #EFBAB3;
+}
+
+div.result.success {
+    background-color: #C7DFB5;
+}
+
+/* Короткие информационныые сообщения в админке доргена */
+div.info,span.info {
+    font-size: 0.8em;
+    color: gray;
+    margin-top: 3px;
+}
+
+/* FOR HELP */
+dt {
+    margin: 15px 0 5px 0;
+    font-weight: bold;
+}
+
+dt b {
+    color: #DF4B37;
+}
+
+dd {
+    padding-bottom: 5px;
+}
+
+dd p {
+    font-style: italic;
+    margin: 0 0 5px 0;
+}
+
+code {
+    display: block;
+    padding: 2px;
+    border: 1px solid #86B8B1;
+    margin: 1px 0 5px 0;
+}
+
+/* /FOR HELP */
+
+/* FOR TEMPLATE */
+div.template-content {
+    margin-top: 15px;
+}
+
+div.template-menu {
+    float: right;
+    width: 190px;
+}
+
+div.template-menu h2 {
+    font-size: 16px;
+    margin: 5px 0px;
+}
+
+div.template-menu a {
+    display: block;
+    height: 20px;
+    overflow:hidden;
+}
+
+div.template-text {
+    margin-right: 200px;
+}
+
+/* /FOR TEMPLATE */
+div.blnews-text {
+    margin: 25px 0px;
+}
+
+/* Стили стандартной таблицы */
+table.table {
+    width: 100%;
+    table-layout: fixed;
+    text-align: left;
+}
+
+table.table th {
+    text-align: left;
+    border-bottom: 4px solid gray;
+}
+
+table.table td {
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #EFECE0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+table.table tr:last-child td {
+    border-bottom-width: 0px;
+}
+
+table.table tr:hover td {
+    background-color: #F2EFE6;
+}
+
+table.table td i {
+    color: gray;
+}
+
+/* Стили таблицы с вертикальными хедерами */
+table.vertical th {
+    text-align: right;
+    vertical-align: top;
+}
+
+table.vertical td {
+    vertical-align: top;
+}
+
+table.table a {
+    color: #1774BF;
+}
+
+/* Список доменов в разделе Ссылки */
+ul.listDomains {
+    margin: 32px 0 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+ul.listDomains li {
+    margin: 0 10px 0 0;
+    padding: 5px;
+    list-style: none;
+    color: gray;
+}
+
+ul.listDomains li.selected {
+    background-color: #EFECE0;
+}
+
+ul.listDomains li.selected a {
+    font-weight: bold;
+}
+
+ul.listDomains li a {
+    color: #1774BF;
+}
+
+ul.listDomains li span {
+    font-size: 0.80em;
+    color: gray;
+    display: block;
+    margin-top: 2px;
+}
+
+ul.listDomains li i {
+    font-size: 0.80em;
+    color: #CACACA;
+    font-style: normal;
+}
+
+div.formatLinks {
+    position: relative;
+}
+
+div.formatLinks a {
+    margin: 0 2px;
+}
+
+div.formatLinks a.delete {
+    color: #DF3E29;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+div.formatLinks a.selected {
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+}
+option.main-select
+{
+    font-weight: bold;
+    margin: 3px 0px;
+}
+option.sub-select
+{
+    margin-left: 20px;
+
+}

@@ -1,0 +1,48 @@
+<?php
+if(isset($_SESSION['pinger_saveservers']))
+  {
+  if($_SESSION['pinger_saveservers'] == 1)
+    {
+    ?>
+      <div class="result success"><?= CPinger::GetTranslate('b_servers_save_success') ?></div>
+    <?php
+    }
+  else
+    {
+    ?>
+      <div class="result error"><?= CPinger::GetTranslate('b_servers_save_error') ?></div>
+    <?php
+    }
+  }
+?>
+<div class="content">
+  <div class="main">
+    <form action="" method="post" enctype="multipart/form-data" >
+      <h2><?= CPinger::GetTranslate('b_task_add_urls_pings') ?></h2>
+      <div class="box">
+        <i><?= CPinger::GetTranslate('b_task_add_file_description') ?> </i>
+        <input type="file" name="file_pings" id="file_pings" class="cb">
+      </div>
+
+      <div class="box">
+        <i><?= CPinger::GetTranslate('b_task_add_description') ?></i>
+        <textarea id="taskList" name="taskListPings" wrap="off" style="width: 100%; height: 100px"></textarea>
+      </div>
+
+      <h2><?= CPinger::GetTranslate('b_task_add_urls_xml') ?></h2>
+      <div class="box">
+        <i><?= CPinger::GetTranslate('b_task_add_file_description_xml') ?> </i>
+        <input type="file" name="file_xml" id="file_xml" class="cb">
+      </div>
+
+      <div class="box">
+        <i><?= CPinger::GetTranslate('b_task_add_description_xml') ?></i>
+        
+        <textarea id="taskList" name="taskListXml" wrap="off" style="width: 100%; height: 100px"></textarea>
+      </div>
+
+      <input type="submit" style="width: 150px; height: 30px; margin-top: 10px;"
+             value="<?= CPinger::GetTranslate('b_task_add_list_to') ?>" name="a[TaskPacketAdd]">
+    </form>
+  </div>
+</div>

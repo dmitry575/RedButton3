@@ -1,0 +1,115 @@
+<?php
+if(isset($_SESSION['settings_savesettings']))
+  {
+  if($_SESSION['settings_savesettings'] == 1)
+    {
+    ?>
+      <div class="result success"><?= CSettings::GetTranslate('b_settings_save_success') ?></div><?php
+    }
+  else
+    {
+    ?>
+      <div class="result error"><?= CSettings::GetTranslate('b_settings_save_error') ?></div><?php
+    }
+  }
+?>
+
+<div class="main">
+  <div class="description">
+    <h1><?=CSettings::GetTranslate('main')?></h1>
+  </div>
+
+  <div class="form">
+
+  </div>
+  <div class="clear"></div>
+
+</div>
+
+
+<div class="content">
+  <div class="main">
+    <form action="" method="post" id="mainForm" enctype="multipart/form-data" name="save_settings">
+      <?
+      $proxies = $this->GetSettings()->GetProxies();
+      $socks_proxies = $this->GetSettings()->GetSocksProxies();?>
+      <div class="frame">
+
+        <div class="box">
+          <i><?=CSettings::GetTranslate('b_proxies')?> (<?=!empty($proxies) ?substr_count($proxies, "\n")+1:0?>)</i>
+          <textarea name="proxies" style="width: 100%;" rows="5" cols="30"><?=$proxies?></textarea>
+        </div>
+
+        <div class="box">
+          <i stile=" white-space: wrap;"><?=CSettings::GetTranslate('b_socks_proxies')?>
+            (<?=!empty($socks_proxies) ? substr_count($socks_proxies, "\n")+1:0?>)</i>
+          <textarea name="socks_proxies" style="width: 100%;" rows="5" cols="30"><?=$socks_proxies?></textarea>
+        </div>
+
+        <?$useragents = $this->GetSettings()->GetUseragents();?>
+
+
+
+        <div class="box">
+          <i><?=CSettings::GetTranslate('b_useragents')?> (<?=substr_count($useragents, "\n")?>)</i>
+          <textarea name="useragents" style="width: 100%;" rows="5" cols="30"><?=$useragents?></textarea>
+        </div>
+        <div class="box">
+          <?=CSettings::GetTranslate('b_ip_searchers')?>
+          <textarea name="ip_searchers" style="width: 100%;" rows="1"
+                    cols="30"><?= $this->GetSettings()->GetIpSearchersStr($this->GetSettings()->GetGlobal('ip_searchers', ''))?></textarea>
+        </div>
+
+
+      </div>
+      <div class="frame">
+        <i><?=CSettings::GetTranslate('b_subcategory_links')?></i>
+
+        <div class="box">
+          <textarea name="subcategory_links" style="width: 100%;" rows="1"
+                    cols="30"><?=$this->GetSettings()->GetGlobal('subcategory_links', '<li><a href="{url}">{title}</a></li>')?></textarea>
+        </div>
+      </div>
+
+      <div class="frame">
+
+        <div class="box">
+          <i><?=CSettings::GetTranslate('b_links')?></i>
+          <textarea name="rand_links" style="width: 100%;" rows="1"
+                    cols="30"><?=$this->GetSettings()->GetGlobal('rand_links', '<li><a href="{url}">{title}</a></li>')?></textarea>
+        </div>
+
+
+        <div class="box">
+          <i><?=CSettings::GetTranslate('b_sitemap')?></i>
+          <textarea name="sitemap" style="width: 100%;" rows="1"
+                    cols="30"><?=$this->GetSettings()->GetGlobal('sitemap', '<li><a href="{url}">{title}</a></li>')?></textarea>
+        </div>
+
+
+        <div class="box">
+          <i><?=CSettings::GetTranslate('b_tags')?></i>
+          <textarea name="tags" style="width: 100%;" rows="1"
+                    cols="30"><?=$this->GetSettings()->GetGlobal('tags', '<a href="{url}" style="font-size: {size}pt;">{title}</a>')?></textarea>
+        </div>
+
+        <div class="box">
+          <i style="white-space: normal;"><?=CSettings::GetTranslate('b_menu')?></i>
+          <textarea name="menu" style="width: 100%;" rows="1"
+                    cols="30"><?=$this->GetSettings()->GetGlobal('menu', '<li><a href="{url}">{title}</a></li>')?></textarea>
+        </div>
+
+        <div class="box">
+          <i style="white-space: normal;"><?=CSettings::GetTranslate('b_links_numbers')?></i>
+          <textarea name="links_numbers" style="width: 100%;" rows="1"
+                    cols="30"><?=$this->GetSettings()->GetGlobal('links_numbers', '<li><a href="{url}">{title}</a></li>')?></textarea>
+        </div>
+
+        <input type="submit" value="<?= CSettings::GetTranslate('b_save') ?>" class="simpleButton" name="a[save]">
+
+      </div>
+      <div class="clear"></div>
+
+    </form>
+  </div>
+</div>

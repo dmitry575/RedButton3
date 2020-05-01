@@ -1,0 +1,84 @@
+   <?php
+   if(isset($_SESSION['translated']))
+      {
+      if($_SESSION['translated'] == 1)
+         {
+         ?>
+         <div class="result success"><?=CTranslate::GetTranslate('b_translate_success')?></div>
+         <?php
+         }
+      else
+         {
+         ?>
+         <div class="result error"><?=CTranslate::GetTranslate('b_translate_error')?></div>
+         <?php
+         }
+      }
+   ?>
+   
+
+<div class="main">
+    <div class="description">
+        <h1><?=CTranslate::GetTranslate('b_translate')?></h1>
+    </div>
+    
+    <div class="form">
+        <form action="" method="post" name="send_translate">
+            <div class="box">
+               <i><?=CTranslate::GetTranslate('b_language_from')?>:</i>
+                <select name="language_from" id="language_from" style="width: 90px;">
+                   <?php
+                   foreach(CTranslate::GetLanguages() as $lang)
+                      {
+                      ?>
+                          <option value="<?=$lang?>"<?=$lang == $this->m_lang_from ? " selected='selected'" : ""?>><?=$lang?></option>
+                         <?php
+                      }
+                   ?>
+                </select>
+
+               <?=CTranslate::GetTranslate('b_language_to')?> 
+
+                <select name="language_to" id="language_to" style="width: 90px;">
+                   <?php
+                   foreach(CTranslate::GetLanguages() as $lang)
+                      {
+                      ?>
+                          <option value="<?=$lang?>"<?=$lang == $this->m_lang_to ? " selected='selected'" : ""?>><?=$lang?></option>
+                         <?php
+                      }
+                   ?>
+                </select>
+            </div>
+            
+            <div class="box">
+                <i><?=CTranslate::GetTranslate('b_filename')?>:</i>
+                <select name="filename" id="filename" style="width: 300px;">
+                   <?=CModel_helper::ListFiles(CModel_text::PATH_TEXTS, $this->m_filename)?>
+                </select>
+            </div>
+            <div class="box">
+                <input type="checkbox"
+                       name="translate_gogole" <?= ($this->m_translate_system & CModel_translate::TRANSLATE_GOOGLE)>0 ? " checked='checked'" : '' ?>
+                       id="translate_gogole" value="<?=CModel_translate::TRANSLATE_GOOGLE?>"> <label
+                    for="translate_gogole"><?=CTranslate::GetTranslate('b_translate_google')?></label><br>
+
+                <input type="checkbox"
+                       name="translate_yandex" <?= ($this->m_translate_system & CModel_translate::TRANSLATE_YANDEX)>0 ? " checked='checked'" : '' ?>
+                       id="translate_yandex" value="<?=CModel_translate::TRANSLATE_YANDEX?>"> <label
+                    for="translate_yandex"><?=CTranslate::GetTranslate('b_translate_yandex')?></label>
+            </div>
+                        
+            <input type="submit" value="<?=CTranslate::GetTranslate('b_start')?>" class="simpleButton" name="a[translate]">
+            <!-- <a href="javascript:Task.Save('send_translate',<?=CModel_task::TYPE_TRANSLATE?>)" class="add"
+                style="left: 160px;"><b>+</b><span><?=CTranslate::GetTranslate('add_task')?></span></a> -->
+            </div>
+        </form>
+    </div>
+    
+    <div class="clear"></div>
+</div>
+
+
+
+

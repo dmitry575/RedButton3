@@ -1,0 +1,1 @@
+a:8:{s:8:"keysFrom";s:4:"list";s:12:"keysFromList";s:22:"1-category-keyword.txt";s:8:"filename";s:25:"text-5e353bc8b8425txt.txt";s:8:"language";s:2:"en";s:13:"threads_count";s:2:"15";s:11:"min_symbols";s:3:"300";s:5:"pause";s:1:"4";s:1:"a";a:1:{s:8:"savetask";s:29:"Добавить задачу";}}

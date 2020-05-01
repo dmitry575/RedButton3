@@ -1,0 +1,50 @@
+<div class="head">
+    <h1 class="title"><?=CNews::GetTranslate('main_title')?></h1>
+</div>
+
+<?php
+if(isset($_SESSION['templates_save']))
+   {
+   ?>
+   <div style="padding:10px; margin: -10px -10px 0 -10px; clear: both;">
+      <?php
+      if($_SESSION['templates_save'] == 1)
+         {
+         ?>
+             <div class="result success"><?=CNews::GetTranslate('b_template_save_success')?></div>
+            <?php
+         }
+      else
+         {
+         ?>
+             <div class="result error"><?=CNews::GetTranslate('b_template_save_error')?></div>
+            <?php
+         }
+      ?>
+   </div>
+   <?php
+   }
+?>
+
+
+<div>
+   <?php
+   if(!empty($this->m_list_news))
+      {
+      foreach($this->m_list_news as $info)
+         {
+           if(!empty($info['lang']) && $info['lang']!=$LNG) continue;
+         ?>
+             <div class="blnews-text">
+                 <h2><?=htmlspecialchars($info['title'])?></h2>
+
+                 <p><span style="color:#055699;"><?=date("d.m.Y", $info['unix_date_publish'])?></span></p>
+
+                 <div><?=$info['description']?></div>
+             </div>
+
+            <?php
+         }
+      }
+   ?>
+</div>

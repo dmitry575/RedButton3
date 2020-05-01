@@ -1,0 +1,1 @@
+a:8:{s:10:"maxThreads";s:2:"10";s:8:"minPause";s:1:"3";s:8:"maxPause";s:2:"15";s:9:"delete40x";s:2:"20";s:9:"delete50x";s:2:"20";s:9:"deleteday";s:1:"2";s:10:"pingsProxy";s:2:"on";s:1:"a";a:1:{s:12:"savesettings";s:18:"Сохранить";}}

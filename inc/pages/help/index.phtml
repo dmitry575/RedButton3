@@ -1,0 +1,11 @@
+<div class="head">
+    <h1 class="logo">
+        <a href="./">redButton</a>
+    </h1>
+</div>
+
+<h1 class="title"><?=CHelp::GetTranslate('main_title')?></h1>
+
+<?
+$filename='./inc/pages/help/help.' . $LNG . '.html';
+if(file_exists($filename)) include $filename;?>

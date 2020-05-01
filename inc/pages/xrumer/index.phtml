@@ -1,0 +1,130 @@
+<?php
+if(isset($_SESSION['xrumer_save']))
+   {
+   if($_SESSION['xrumer_save'] == 1)
+      {
+      ?>
+      <div class="result success"><?=CXrumer::GetTranslate('b_save_success')?></div>
+      <?php
+      }
+   else
+      {
+      ?>
+      <div class="result error"><?=CXrumer::GetTranslate('b_save_error')?></div>
+      <?php
+      }
+   }
+?>
+
+<div class="main">
+    <div class="description">
+        <h1><?=CXrumer::GetTranslate('main_title')?></h1>
+    </div>
+    
+    <div class="form">
+        <form action="" method="post">
+            <div class="left" style="margin-right: 50px;">
+                <h2 style="font-weight: normal; margin: 0 0 10px 0; font-size: 22px;"><?=CXrumer::GetTranslate('b_setting_project')?></h2>
+            
+                <div class="box">
+                    <i><?=CXrumer::GetTranslate('b_project_forum')?>:</i> 
+                    <input type="text" name="project_forum" size="37" value="<?=$this->GetSettings("project_forum", 9)?>">
+                </div>
+                
+                <div class="box">
+                    <i><?=CXrumer::GetTranslate('b_project_profile')?>:</i> 
+                    <input type="text" name="project_profile" size="37" value="<?=$this->GetSettings("project_profile", 3)?>">
+                </div>
+                
+                <div class="box">
+                    <i><?=CXrumer::GetTranslate('b_project_topics')?></i> 
+                    <input type="text" name="project_topics" size="37" value="<?=$this->GetSettings("project_topics", 3)?>">
+                </div>
+                
+                <div class="box">
+                    <i><?=CXrumer::GetTranslate('b_email_server')?></i> 
+                    <input type="text" name="email_server" size="37" value="<?=$this->GetSettings("email_server", 'gmail.com')?>">
+                </div>
+                
+                <div class="box">
+                    <i><?=CXrumer::GetTranslate('b_pop_server')?></i> 
+                    <input type="text" name="pop_server" size="37" value="<?=$this->GetSettings("pop_server", 'pop.gmail.com')?>">
+                </div>
+                
+                <div class="box">
+                    <i><?=CXrumer::GetTranslate('b_redbutton_url')?></i> 
+                    <input type="text" name="redbutton_url" size="37" value="<?=$this->GetSettings("redbutton_url", isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'http://getredbutton.com/rb/')?>">
+                </div>
+            </div>
+            
+            
+            <div class="left">
+
+                <h2 style="font-weight: normal; margin: 0 0 10px 0; font-size: 22px;"><?=CXrumer::GetTranslate('b_setting_sheduler')?></h2>
+
+                <div class="box">
+                    <i><?=CXrumer::GetTranslate('b_project_forum')?></i> 
+                    <input type="text" name="project_forum" size="37" value="<?=$this->GetSettings("project_forum", 2)?>">
+                </div>
+                
+                <div class="box">
+                    <i><?=CXrumer::GetTranslate('b_project_profile')?></i> 
+                    <input type="text" name="project_profile" size="37" value="<?=$this->GetSettings("project_profile", 1)?>">
+                </div>
+                
+                <div class="box">
+                    <i><?=CXrumer::GetTranslate('b_project_topics')?></i> 
+                    <input type="text" name="project_topics" size="37" value="<?=$this->GetSettings("project_topics", 1)?>">
+                </div>
+                
+                <div class="box">
+                    <i><?=CXrumer::GetTranslate('b_email_file')?></i>
+                    <select name="emails_file" id="emails_file" style="width: 242px; display: block;">
+                       <?=CModel_helper::ListFiles((CModel_xrumer::PATH . CModel_xrumer::PATH_EMAILS), $this->GetSettings('emails_file'))?>
+                    </select>
+
+                    <div class="info"><?=CXrumer::GetTranslate('b_email_file_description')?></div>
+                </div>
+            
+                <!--
+              <h2><?=CXrumer::GetTranslate('b_setting_linker')?></h2>
+              
+              <div class="box">
+                 <i><?=CXrumer::GetTranslate('b_linker_count_signature')?></i> <input type="text" name="linker_count_signature" size="37"
+                    value="<?=$this->GetSettings("linker_count_signature", 2)?>">
+              </div>
+              <div class="box">
+                 <i><?=CXrumer::GetTranslate('b_linker_count_text')?></i> <input type="text" name="linker_count_text" size="37"
+                    value="<?=$this->GetSettings("linker_count_text", 1)?>">
+              </div>
+              <div class="box">
+                 <i><?=CXrumer::GetTranslate('b_linker_count_links')?></i> <input type="text" name="linker_count_links" size="37"
+                    value="<?=$this->GetSettings("linker_count_links", 1)?>">
+              </div>
+              <div class="box">
+                 <i><?=CXrumer::GetTranslate('b_linker_number_trast')?></i> <input type="text" name="linker_number_trast" size="37"
+                    value="<?=$this->GetSettings("linker_number_trast", 2)?>">
+              </div>
+              <div class="box">
+                 <i><?=CXrumer::GetTranslate('b_linker_number_normal')?></i> <input type="text" name="linker_number_normal" size="37"
+                    value="<?=$this->GetSettings("linker_number_normal", 1)?>">
+              </div>
+              <div class="box">
+                 <i><?=CXrumer::GetTranslate('b_linker_number_topics')?></i> <input type="text" name="linker_number_topics" size="37"
+                    value="<?=$this->GetSettings("linker_number_topics", 1)?>">
+              </div> -->
+            </div>
+            <div class="clear"></div>
+            
+            <input type="submit" value="<?=CXrumer::GetTranslate('b_save_settings')?>" class="simpleButton" name="a[savesettings]">
+        </form>
+    </div>
+    <div class="clear"></div>
+
+</div>
+
+
+<div class="content">
+
+</div>
+

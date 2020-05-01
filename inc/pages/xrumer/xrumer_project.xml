@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XRumerProject>
+    <PrimarySection>
+        <ProjectName>{NAME_PROJECT}</ProjectName>
+        <NickName>{NICKNAME}</NickName>
+        <RealName>{REAL_NICKNAME}</RealName>
+        <Password>{PASSWORD}</Password>
+        <EmailAddress>{EMAIL}</EmailAddress>
+        <EmailPassword>{EMAIL_PASSWORD}</EmailPassword>
+        <EmailLogin>{EMAIL_LOGIN}</EmailLogin>
+        <EmailPOP>{EMAIL_POP3}</EmailPOP>
+        <Homepage>{HOMEPAGE}</Homepage>
+        <ICQ>{ICQ}</ICQ>
+        <City>{CITY}</City>
+        <Country>{COUNTRY}</Country>
+        <Occupation>{OCCUPATION}</Occupation>
+        <Interests>{INTERESTS}</Interests>
+        <Signature>{SIGNATURE}</Signature>
+        <UnknownFields></UnknownFields>
+        <PollTitle>{POLL_TIITLE}</PollTitle>
+        <PollOption1>{POLL_OPTION_1}</PollOption1>
+        <PollOption2>{POLL_OPTION_2}</PollOption2>
+        <PollOption3>{POLL_OPTION_3}</PollOption3>
+        <PollOption4>{POLL_OPTION_4}</PollOption4>
+        <PollOption5>{POLL_OPTION_4}</PollOption5>
+    </PrimarySection>
+    <SecondarySection>
+        <Subject1>{SUBJECT1}</Subject1>
+        <Subject2>{SUBJECT2}</Subject2>
+        <PostText>
+            {TEXT_MESSAGE}
+        </PostText>
+        <Prior>{PRIOR_LIST}</Prior>
+        <OnlyPriors>False</OnlyPriors>
+    </SecondarySection>
+</XRumerProject>

@@ -1,0 +1,469 @@
+
+
+* { margin: 0; padding: 0; }
+html { filter: expression(document.execCommand("BackgroundImageCache", false, true)); }
+body {
+	font: 13px/18px "Trebuchet MS", Tahoma, Arial, sans-serif;
+	color: #444;
+}
+
+a {
+	color: #E60000;
+	text-decoration: none;
+}
+a:hover {
+	color: #AA0001;
+	text-decoration: underline;
+}
+p {margin: 0; padding: 10px 0;}
+h1 {margin: 20px 0 0;}
+img {border: 0;}
+h2 {
+	font: normal 16px "Trebuchet MS", Arial, Sans-Serif;
+	margin: 0 0 12px;
+}
+blockquote {
+	margin: 10px 0 10px 30px;
+	border-left: 3px solid #E60000;
+	background: #EEE;
+	padding: 5px 15px;
+}
+* html blockquote {height: 1%;}
+blockquote p {
+	margin: 0;
+}
+
+#wrapper {
+	width: 990px;
+	margin: 0 auto;
+	border-top: 5px solid #EEE;
+}
+
+/* Header
+-----------------------------------------------------------------------------*/
+#header {
+    height: 137px;
+    border-bottom: 3px solid #EAEAEA;
+    margin-bottom: 28px;
+    position: relative;
+}
+#top-nav {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    list-style: none;
+}
+#top-nav li {
+    float: left;
+}
+#top-nav a {
+    color: #808080;
+    margin: 0 0 0 13px;
+    padding: 0 0 0 12px;
+    font-size: 12px;
+}
+#top-nav .current_page_item a {
+}
+#searchform {
+    position: absolute;
+    top: 57px;
+    right: 0;
+}
+#searchform input {
+    font: 11px "Trebuchet MS", Arial, Sans-Serif;
+    float: left;
+}
+#s {
+    width: 175px;
+    padding: 2px 6px;
+    border: 2px solid #ccc;
+    margin-right: 5px;
+}
+#searchsubmit {
+    background: #E60000;
+    border: 0;
+    padding: 2px 7px;
+    color: #fff;
+    font-weight: bold !important;
+    overflow: visible;
+    height: 24px;
+    cursor: pointer;
+}
+
+#logo {
+    position: absolute;
+    top: 11px;
+    color: #808080;
+    line-height: 1;
+    font-size: 33px;
+}
+#logo span {
+    display: block;
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: uppercase;
+    margin: 5px 0 0;
+}
+
+#nav {
+    position: absolute;
+    top: 105px;
+    left: 0;
+    width: 100%;
+    height: 24px;
+    padding: 7px 0 0 0;
+    clear: both;
+    border-bottom: 1px solid #CCC;
+    position: relative;
+}
+#nav li {
+    font-size: 13px;
+    display: inline;
+    text-transform: uppercase;
+}
+#nav li a {
+    margin: 0 25px 0 10px;
+    color: #808080;
+}
+#nav li a:hover {color: #444;}
+#nav li.current_page_item {
+}
+
+/* Content
+-----------------------------------------------------------------------------*/
+* html #container {height: 1%;}
+#container:after {
+	content: '.';
+	display: block;
+	clear: both;
+	visibility: hidden;
+	height: 0;
+}
+#content {
+	width: 540px;
+	float: left;
+	padding: 0 10px 20px 0;
+	overflow: hidden;
+}
+
+#content h2 {
+	font: normal 19px "Trebuchet MS", Arial, Sans-Serif;
+	padding: 1px 0 4px;
+	border-bottom: 1px solid #EEE;
+	margin-bottom: 12px;
+}
+#content h2.pagetitle {
+	padding-left: 3px;
+}
+#content h3 {
+	font: normal 17px "Trebuchet MS", Arial, Sans-Serif;
+	padding: 1px 0 4px;
+	margin-bottom: 2px;
+}
+
+#content img {
+	float: left;
+	border: 3px solid #eee;
+	padding: 1px;
+	margin: 5px 10px 5px 0;
+}
+
+#content .post {
+	margin: 0 0 15px;
+}
+#content .post h2,
+#content .post h3 {
+	font-size: 20px;
+	margin: 0 0 2px;
+}
+.post ul,
+.post ol {
+	margin: 7px 0 7px 35px;
+}
+.post li {
+	padding: 2px 0;
+}
+.post .postmetadata {
+	font-size: 11px;
+	padding: 0 0 7px;
+}
+
+.entry h1 {
+	font-size: 18px;
+	margin: 15px 0 10px;
+}
+.entry h2 {
+	font-size: 17px !important;
+	font-weight: bold !important;
+	margin: 15px 0 10px !important;
+	padding: 0 !important;
+	border: none !important;
+}
+.entry h3 {
+	font-size: 15px !important;
+	font-weight: bold !important;
+	margin: 15px 0 10px !important;
+	padding: 0 !important;
+}
+.entry h4 {
+	font-size: 13px;
+	margin: 15px 0 10px;
+	font-weight: bold !important;
+}
+
+.line {
+	clear: both;
+	padding: 3px;
+	margin: 0 0 15px;
+}
+.recent {
+	margin-left: 30px;
+}
+.recent li {
+	padding: 1px 0;
+}
+
+.other {
+	margin: 20px 0;
+	padding-top: 10px;
+}
+.other .recent li {
+	list-style: none;
+	border-bottom: 1px solid #EEE;
+	padding: 4px;
+}
+.other .recent li a {
+	padding: 0 0 0 12px;
+	color: #808080;
+}
+
+.nav {
+	padding: 0 0 22px;
+}
+.navigation {
+	margin: 20px 0;
+}
+
+#order {
+	text-align: right;
+	padding: 0 0 10px;
+}
+#order select {
+	font: 13px "Trebuchet MS", Arial, Sans-Serif;
+	width: 120px;
+}
+
+#content ul.child-categories {
+	margin: 0 0 23px 30px;
+}
+#content ul.child-categories ul {
+	margin-left: 20px;
+}
+
+h3#comments {
+	margin-bottom: -10px;
+}
+#respond h3 {
+	margin: 20px 0 0;
+}
+
+ol.commentlist {list-style: none; margin: 20px 0 0; padding:0;}
+ol.commentlist li {border: 1px solid #DFDFDF; height: 1%; margin: 0 0 10px; padding: 5px 10px 8px; position: relative;}
+ol.commentlist li ul.children li {margin: 0 0 2px;}
+ol.commentlist li.comment-author-admin {border-color: #999;}
+ol.commentlist li div.vcard cite.fn {font-style: normal; font-weight: bold;}
+ol.commentlist li div.vcard img.avatar {border: 1px solid #DDD !important; padding: 2px !important; position: absolute; right: 8px; top: 8px; margin: 0 !important;}
+ol.commentlist li div.comment-meta {font-size: 10px; font-weight: bold; color: #888;}
+ol.commentlist li div.comment-meta a {color: #888; text-decoration: none;}
+ol.commentlist li div.comment-meta a:hover {text-decoration: underline;}
+ol.commentlist li div.reply {font-size: 13px; line-height: 16px; width: 100%; overflow: hidden; text-transform: lowercase; }
+ol.commentlist li div.reply a {background: #F4F4F4; float: left; color: #AA0001; text-decoration: none; padding: 0 6px 2px; border: 1px solid #CCC;}
+ol.commentlist li div.reply a:hover {background: #E60000; color: #FFF; border: 1px solid #E60000;}
+ol.commentlist li ul.children {list-style: none; margin: 10px 0 0;}
+#cancel-comment-reply small {font-size: 13px}
+ol.commentlist li.even {background: #FFF;}
+ol.commentlist li.odd {background: #F4F4F4;}
+
+#commentform p {
+	padding: 8px 0 3px;
+}
+#author, #email, #url, #comment, #submit {
+	font: 13px Arial, Tahoma;
+	padding: 3px 5px;
+	width: 200px;
+	border: 1px solid #CCC;
+}
+#comment {
+	width: 528px;
+	height: 170px;
+}
+#author:focus, #email:focus, #url:focus, #comment:focus, #submit:focus {
+	border-color: #999;
+}
+li.depth-1 #comment {width: 505px}
+li.depth-2 #comment {width: 485px}
+li.depth-3 #comment {width: 462px}
+li.depth-4 #comment {width: 442px}
+li.depth-5 #comment {width: 425px}
+#submit {
+	width: 115px;
+	height: 24px;
+	padding: 0;
+	background: #F4F4F4;
+	cursor: pointer;
+	overflow: visible;
+}
+#submit:hover {
+	background: #E60000;
+	color: #FFF;
+	border: 1px solid #E60000;
+}
+
+
+
+/* Sidebars
+-----------------------------------------------------------------------------*/
+#sidebars {
+	float: left;
+	width: 440px;
+	font-size: 12px;
+	line-height: 17px;
+}
+* html #sidebars {height: 1%;}
+#sidebars:after {
+	content: '.';
+	display: block;
+	clear: both;
+	visibility: hidden;
+	height: 0;
+}
+
+#l-sidebar {
+	float: left;
+	width: 230px;
+	padding: 0 10px;
+}
+#r-sidebar {
+	float: left;
+	width: 180px;
+	padding: 0 0 0 10px;
+}
+
+#sidebars ul {
+	margin: 0 0 15px;
+}
+#sidebars li {
+	list-style: none;
+	border-bottom: 1px solid #EEE;
+	padding: 3px 4px;
+	margin: 0;
+}
+#sidebars li a {
+	padding: 0 0 0 12px;
+	color: #808080;
+}
+#sidebars h2 {
+	font: normal 20px "Trebuchet MS", Arial, Sans-Serif;
+	padding: 0 0 3px 3px;
+	border-bottom: 1px solid #EEE;
+}
+#sidebars h3 {
+	font: normal 17px/19px "Trebuchet MS", Arial, Sans-Serif;
+	padding: 0 0 3px;
+}
+#sidebars .post {
+	margin: 0 0 24px;
+}
+#sidebars p {
+	padding: 0;
+}
+#sidebars .postmetadata {
+	font-size: 11px;
+}
+
+#autoriz {
+	margin: 0 0 20px;
+}
+#autoriz label {
+	display: block;
+	float: left;
+	width: 58px;
+	padding: 0 12px;
+	font-size: 13px;
+}
+#autoriz input {
+	float: left;
+	font: 13px "Trebuchet MS", Arial, Sans-Serif;
+	width: 130px;
+	margin-bottom: 5px;
+	border: 1px solid #CCC;
+	padding: 0 2px;
+}
+.rememberme {
+	padding: 0 0 0 12px;
+}
+#autoriz .rememberme label {
+	cursor: pointer;
+	padding: 0;
+	width: 120px;
+	margin: 2px 0 0;
+	*margin: 3px 0 0;
+}
+#autoriz .rememberme input {
+	width: 15px;
+	padding: 0;
+	border: none;
+	margin: 2px 4px 0 0;
+	*margin: -1px 4px 0 0 !important;
+	*margin: -1px 2px 0 0;
+}
+#autoriz #enter {
+	float: right;
+	margin: 0 12px 0 0;
+	border: none;
+	background: #E60000;
+	color: #FFF;
+	width: 60px;
+	height: 21px;
+	cursor: pointer;
+}
+#autoriz p {
+	clear: both;
+	text-align: center;
+	padding: 5px 0 0;
+}
+#autoriz a {
+	margin: 0 7px;
+}
+
+#manage {
+	margin: 0 0 20px;
+}
+#manage p {
+	padding: 0 0 10px 5px;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.bg5
+{
+	font-size: 8px;
+	color: #FFFFFF;
+}
+
+.bg5 a:link, .bg5 a:visited, .bg5 a:hover, .bg5 a:active
+{
+	font-size: 8px;
+	color: #FFFFFF;
+}
+/* Footer
+-----------------------------------------------------------------------------*/
+#footer {
+	clear: both;
+	padding: 7px 10px;
+	margin: 0 0 15px;
+	font-size: 11px;
+	line-height: 16px;
+	color: #808080;
+	background: #EEE;
+}

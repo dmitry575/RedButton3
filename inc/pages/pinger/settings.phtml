@@ -1,0 +1,69 @@
+<?php
+if(isset($_SESSION['pinger_saveservers']))
+  {
+  if($_SESSION['pinger_saveservers'] == 1)
+    {
+    ?>
+      <div class="result success"><?= CPinger::GetTranslate('b_settings_save_success') ?></div>
+    <?php
+    }
+  else
+    {
+    ?>
+      <div class="result error"><?= CPinger::GetTranslate('b_settings_save_error') ?></div>
+    <?php
+    }
+  }
+?>
+<div class="content">
+<div class="main">
+  <form action="" method="post" enctype="multipart/form-data" >
+    <h2><?= CPinger::GetTranslate('b_settings_description') ?></h2>
+
+    <div class="box">
+      <i><?= CPinger::GetTranslate('b_settings_threads') ?></i>
+      <input type="text" size="35" value="<?=$this->m_model->GetSettings('maxThreads',10)?>" name="maxThreads">
+    </div>
+
+    <div class="box">
+      <i><?= CPinger::GetTranslate('b_settings_pause') ?></i>
+      <?= CPinger::GetTranslate('b_settings_min_pause') ?>
+      <input type="text" size="2" value="<?=$this->m_model->GetSettings('minPause',3)?>" name="minPause">
+      <?= CPinger::GetTranslate('b_settings_max_pause') ?>
+      <input type="text" size="2" value="<?=$this->m_model->GetSettings('maxPause',15)?>" name="maxPause">
+    </div>
+
+    <div class="box">
+      <i><?= CPinger::GetTranslate('b_settings_delete_title') ?></i>
+      <div>
+        <?= CPinger::GetTranslate('b_settings_delete_40x') ?>
+        <input type="text" size="5" value="<?=$this->m_model->GetSettings('delete40x',0)?>" name="delete40x">
+        <span class="small"><?= CPinger::GetTranslate('b_settings_delete_40x_more') ?></span>
+      </div>
+      <div style="margin-top: 5px;">
+        <?= CPinger::GetTranslate('b_settings_delete_50x') ?>
+        <input type="text" size="5" value="<?=$this->m_model->GetSettings('delete50x',0)?>" name="delete50x">
+        <span class="small"><?= CPinger::GetTranslate('b_settings_delete_50x_more') ?></span>
+      </div>
+      <div style="margin-top: 5px;">
+        <?= CPinger::GetTranslate('b_settings_delete_day') ?>
+        <input type="text" size="5" value="<?=$this->m_model->GetSettings('deleteday',2)?>" name="deleteday">
+        <span class="small"><?= CPinger::GetTranslate('b_settings_delete_day_more') ?></span>
+      </div>
+    </div>
+
+    <div class="box">
+      <i><?= CPinger::GetTranslate('b_settings_proxy_title') ?></i>
+      <i><input type="checkbox" name="pingsProxy" id="pingsProxy" <?=$this->m_model->GetSettings('pingsProxy') == 'on' ? "checked='checked'" : NULL ?> class="cb">
+        <label for="pingsProxy"><?=CPinger::GetTranslate('b_pings_proxy')?></label>
+      </i>
+      <i><input type="checkbox" name="xmlProxy" id="xmlProxy" <?=$this->m_model->GetSettings('xmlProxy') == 'on' ? "checked='checked'" : NULL ?> class="cb">
+        <label for="xmlProxy"><?=CPinger::GetTranslate('b_xml_proxy')?></label>
+      </i>
+    </div>
+
+    <input type="submit" style="width: 100px; height: 30px; margin-top: 10px;" value="<?= CPinger::GetTranslate('b_settings_save') ?>" name="a[savesettings]">
+  </form>
+
+</div>
+  </div>
